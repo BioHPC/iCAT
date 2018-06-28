@@ -1,7 +1,8 @@
 # iCAT: Immune Cells Analysis software Tool
 
-PI: Dr. Richard DiPaolo
-PI: Dr. Tae-Hyuk (Ted) Ahn
+PI: Dr. Richard DiPaolo, Dep. of Molecular Microbiology and Immunology, Saint Louis University School of Medicine
+
+PI: Dr. Tae-Hyuk (Ted) Ahn, Dep. of Computer Science, Saint Louis University
 
 High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. However, the nature of this process requires analysis of massive datasets that requires streamlining. Here we present ICAT, an R-based method for tackling this data and applying statistical analyses to find significant patterns and divergences.
 
