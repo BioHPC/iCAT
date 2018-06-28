@@ -48,3 +48,6 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 * Run R script as below
 * source("iCAT.r")
 
+# Output iCAT Package:
+
+* If you run the program, it automatically generate PDF histogram plot for frequency of receptor in naive and vaccinated samples.

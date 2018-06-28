@@ -135,9 +135,11 @@ VaccFiles <- "Post"
   
   vacpercs <- (as.numeric(vaccounts)/as.numeric(vactotals))*100
   
+  pdf("HistClonotypes.pdf")
   hist(navpercs, xlim = c(0,.2),ylim = c(0,25), breaks = 2, main = "Percentages of clonotypes", xlab = "Percentages", col = 'pink')
   par(new=TRUE)
   hist(vacpercs, xlim = c(0,.2),ylim = c(0,25), breaks = 10,main = "Percentages of clonotypes", xlab = "Percentages", col = 'blue')
+  dev.off()
   
   end_time <- Sys.time()
   elpased_time = end_time - start_time
