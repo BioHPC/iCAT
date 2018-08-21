@@ -1,6 +1,7 @@
 library(data.table)
 library(dplyr)
 library(plyr)
+library(ggplot2)
 
 NaiveFiles <- "Pre"
 VaccFiles <- "Post"
