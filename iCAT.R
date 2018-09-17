@@ -2,6 +2,7 @@ library(data.table)
 library(dplyr)
 library(plyr)
 library(hash)
+library(ggplot2)
 
 NaiveFiles <- "Pre"
 VaccFiles <- "Post"
