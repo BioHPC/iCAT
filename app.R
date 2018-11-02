@@ -1,4 +1,5 @@
 library(shiny)
+#library(DT)
 source("iCAT.R")
 options(warn=1)
 
@@ -7,14 +8,23 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      textInput("pre",
-                "Choose PRE directory:",
-                value = paste(getwd(), "/Pre/", sep = "")
+      fileInput("pre",
+                "Negative Training", multiple = TRUE,
+                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
       ),
-      textInput("post",
-                "Choose POST directory:",
-                value = paste(getwd(), "/Post/", sep = "")
+      fileInput("post",
+                "Positive Training", multiple = TRUE,
+                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
       ),
+      fileInput("indpt",
+                "Independent", multiple =T,
+                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")),
+      radioButtons("field", "Analyze Clonotypes By:",
+                   choices= list("CDR3 Amino Acid Only" = "aminoAcid",
+                                 "TCRV-CDR3-TCRJ" = "b",
+                                 "Nucleic Acid (DNA)" = "nucleotide")),
+      textInput("pvalue", "Max p-value", value = 0.2),
+      textInput("thresh", "Min Threshold of Public Sequences", value = 3),
       tags$hr(),
       
       actionButton("run", "Run Analysis")
@@ -28,14 +38,13 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
+  options(shiny.maxRequestSize=30*1024^2)
   
   both <- eventReactive(input$run, {
-    lpre <- listDir(input$pre)
-    lpost <- listDir(input$post)
-    naive <- readPre(lpre)
-    vaccs <- readPost(lpost)
+    naive <- readPre(input$pre$datapath, input$field)
+    vaccs <- readPost(input$post$datapath, input$field)
     t1 <- Sys.time()
-    anl <- analyse(naive, vaccs, lpre, lpost)
+    anl <- analyse(naive, vaccs, input$pre$datapath, input$post$datapath, input$field)
     t2 <- Sys.time()
     print(round(difftime(t2, t1, units = "secs"), digits = 2))
     return(anl)

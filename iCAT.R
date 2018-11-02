@@ -3,23 +3,23 @@ library(dplyr)
 library(plyr)
 library(hash)
 
-NaiveFiles <- "Pre"
-VaccFiles <- "Post"
+#NaiveFiles <- "Pre"
+#VaccFiles <- "Post"
 
 # iCAT <- function(NaiveFiles, VaccFiles) {
 
 start_time <- Sys.time()
 
 #process files
-processFiles <- function(x) {
+processFiles <- function(x, field) {
   # get sequenceStatus column to use as filter, then remove it
   dat <-
     fread(x,
-          select = c("aminoAcid", "vGeneName", "jGeneName", "sequenceStatus"))
+          select = c(field,"vGeneName", "jGeneName", "sequenceStatus"))
   dat <- dat[dat$sequenceStatus == "In",]
-  dat <- dat[, 1:3]
+  dat <- dat[, 1:4]
   dat <- dat[!duplicated(dat),]
-  dat <- dat[order(dat$aminoAcid),]
+  dat <- dat[order(dat[[field]]),]
 }
 
 listDir <- function (dir) {
@@ -32,7 +32,7 @@ listDir <- function (dir) {
     )
 }
 
-readPre <- function(list) {
+readPre <- function(list, field) {
   if (length(list) == 0) {
     message("Error in locating Naive Files")
     return()
@@ -41,17 +41,17 @@ readPre <- function(list) {
   
   #combine files and count repeats
   
-  final <- lapply(list, processFiles)
+  final <- lapply(list, processFiles,field=field)
   final <- rbindlist(final)
   final <-
-    data.table(paste(final$aminoAcid, final$vGeneName, final$jGeneName, sep = " "))
+    data.table(paste(final[[field]], final$vGeneName, final$jGeneName, sep = " "))
   colnames(final) <- "names"
   final <- final[, .N, by = names(final)]
   colnames(final) <- c("names", "naiveamounts")
   return(final)
 }
 
-readPost <- function(list) {
+readPost <- function(list, field) {
   if (length(list) == 0) {
     message("Error in locating Naive Files")
     return()
@@ -60,10 +60,10 @@ readPost <- function(list) {
   
   #combine files and count repeats
   
-  final <- lapply(list, processFiles)
+  final <- lapply(list, processFiles, field=field)
   final <- rbindlist(final)
   final <-
-    data.table(paste(final$aminoAcid, final$vGeneName, final$jGeneName, sep = " "))
+    data.table(paste(final[[field]], final$vGeneName, final$jGeneName, sep = " "))
   colnames(final) <- "names"
   final <- final[, .N, by = names(final)]
   colnames(final) <- c("names", "vaccamounts")
@@ -77,7 +77,7 @@ readPost <- function(list) {
 # message("Process time: ", elapsed_time, " seconds")
 
 
-analyse <- function(naive, vaccs, prelist, postlist) {
+analyse <- function(naive, vaccs, prelist, postlist, field) {
   numpre <- length(prelist)
   numpost <- length(postlist)
   
@@ -110,7 +110,7 @@ analyse <- function(naive, vaccs, prelist, postlist) {
   uniquefishervalues$pvals <-
     apply(uniquefishervalues, 1, function(x)
       fisher.test(matrix(x, nrow = 2), alternative = "greater")$p.value)
-  
+  # AR: **kyle sumcv idea**
   pvalfishies <-
     merge(
       uniquefishervalues,
@@ -118,6 +118,14 @@ analyse <- function(naive, vaccs, prelist, postlist) {
       by = c("vaccamounts", "naiveamounts", "vaccabsent",   "naiveabsent"),
       sort = FALSE
     )
+  uniquefishervalues$sumcv <-
+    lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$vaccamounts[pvalfishies$pvals <= x]))
+  uniquefishervalues$covvac <- 
+    as.numeric(uniquefishervalues$sumcv) / numpost
+  uniquefishervalues$sumcn <- 
+    lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$naiveamounts[pvalfishies$pvals <= x]))
+  uniquefishervalues$covnav <- as.numeric(uniquefishervalues$sumcn) / numpre
+
   
   #bind p values to table
   all <- cbind(all, pvalfishies)
@@ -128,43 +136,29 @@ analyse <- function(naive, vaccs, prelist, postlist) {
   
   all <- transform(all, Cn = ave(naiveamounts, FUN = cumsum))
   
-  covvac <- all$Cv / numpost
-  covnav <- all$Cn / numpre
-  all <- cbind(all, covvac, covnav)
-  all$covnav[all$covnav < 1] <- 1
-  ratio <- all$covvac / all$covnav
-  all <- cbind(all, ratio)
-  all <- all[all$pvals < .1,]
+  #covvac <- all$Cv / numpost
+  #covnav <- all$Cn / numpre
+  #all <- cbind(all, covvac, covnav)
+  #all$covnav[all$covnav < 1] <- 1
+  #ratio <- all$covvac / all$covnav
+  #all <- cbind(all, ratio)
+  #all <- all[all$pvals < .1,]
   #all <- subset(all, pvalfishies < .1)
-  maxrat <- max(all$ratio)
-  pval <- all$pvalfishies[ratio == maxrat]
+  uniquefishervalues$ratio <- ifelse(uniquefishervalues$covnav < 1,
+                                     uniquefishervalues$covvac,
+                                     uniquefishervalues$covvac/uniquefishervalues$covnav)
+  #maxrat <- max(all$ratio)
+  pval <- uniquefishervalues$pvals[which.max(uniquefishervalues$ratio)]
+  #pval <- all$pvalfishies[ratio == maxrat]
   #get final list
-  finally <- all[all$pvals <= .1,]
+  finally <- all[all$pvals <= pval,]
   #  finally <<- subset(all, pvalfishies <= .1)
   
-  # greplistpre <- lapply(prelist, function(x) {
-  #   f  <- file(x, open = "r")
-  #   h <- hash()
-  #   while (length(oneLine <- readLines(f, n = 1, warn = FALSE)) > 0) {
-  #     # aminoAcid, vGeneName, jGeneName
-  #     id <- paste((strsplit(oneLine, "\t", fixed=TRUE))[[1]][c(2,8,22)], collapse=" ") 
-  #     if (!startsWith(id, " ")) {
-  #       
-  #       if (has.key(id, h)) {
-  #         h[[id]] <- h[[id]] + 1
-  #       } else {
-  #         h[[id]] <- 1
-  #       }
-  #     }
-  #   }
-  #   close(f)
-  # 
-  #   return(h)
-  # })
+
   greplistpre <- lapply(prelist, function(x) {
-    dat <- fread(x, select = c("aminoAcid", "vGeneName", "jGeneName"))
+    dat <- fread(x, select = c(field, "vGeneName", "jGeneName"))
     dat <-
-      data.table(paste(dat$aminoAcid, dat$vGeneName, dat$jGeneName, sep = " "))
+      data.table(paste(dat[[field]], dat$vGeneName, dat$jGeneName, sep = " "))
     dat <- dat[c(grep("^[A-Z*]", dat$V1)), ]
     dat <- unique(dat[,freq := .N, by = V1]) # similar to sort | uniq -c
     h <- hash(dat$V1, dat$freq)
@@ -173,9 +167,9 @@ analyse <- function(naive, vaccs, prelist, postlist) {
   
   
   greplistppost <- lapply(postlist, function(x) {
-    dat <- fread(x, select = c("aminoAcid", "vGeneName", "jGeneName"))
+    dat <- fread(x, select = c(field, "vGeneName", "jGeneName"))
     dat <-
-      data.table(paste(dat$aminoAcid, dat$vGeneName, dat$jGeneName, sep = " "))
+      data.table(paste(dat[[field]], dat$vGeneName, dat$jGeneName, sep = " "))
     dat <- dat[c(grep("^[A-Z*]", dat$V1)), ]
     dat <- unique(dat[,freq := .N, by = V1]) # similar to sort | uniq -c
     h <- hash(dat$V1, dat$freq) # build hash of counts
@@ -215,7 +209,7 @@ analyse <- function(naive, vaccs, prelist, postlist) {
 plotHist <- function(comb) {
   navvac_hist <-
     ggplot(melt(comb), aes(x = value, fill = Var2)) +
-    geom_histogram(binwidth = 0.01, color = 1) +
+    geom_histogram(color = 1) +
     labs(
       title = "Percentage of Clonotypes",
       y = "Frequency",
@@ -243,61 +237,62 @@ savePlot <- function(plotIn) {
 }
 
 # ** start of Kyle's Method (modified to compile) **
-# navmean <- mean(navpercs)
-#
-# navsd <- sd(navpercs)
-#
-# vacmean <- mean(vacpercs)
-#
-# vacsd <- sd(vacpercs)
-#
-# navnavdnorm <- dnorm(navpercs, mean=navmean, sd=navsd, log=FALSE)
-#
-# navvacdnorm <- dnorm(navpercs, mean=vacmean, sd=vacsd, log=FALSE)
-#
-# vacvacdnorm <- dnorm(vacpercs, mean=vacmean, sd=vacsd, log=FALSE)
-#
-# vacnavdnorm <- dnorm(vacpercs, mean=navmean, sd=navsd, log=FALSE)
-#
-# navclass <- ifelse(navnavdnorm>navvacdnorm, "NAÏVE", "INFECTED")
-#
-# vacclass <- ifelse(vacvacdnorm>vacnavdnorm, "INFECTED", "NAÏVE")
-#
-# navnavdnorm <- round(navnavdnorm, digits = 4)
-#
-# navvacdnorm <- round(navvacdnorm, digits = 4)
-#
-# vacvacdnorm <- round(vacvacdnorm, digits = 4)
-#
-# vacnavdnorm <- round(vacnavdnorm, digits = 4)
-#
-# navdata <- cbind(navpercs, navnavdnorm, navvacdnorm, navclass)
-#
-# vacdata <- cbind(vacpercs, vacvacdnorm, vacnavdnorm, vacclass)
-#
-# classmatrix <-
-#   matrix(
-#     c(
-#       sum(navdata[,4] == "NAÏVE"), # assuming this is what intended
-#       sum(navdata[,4] == "INFECTED"),
-#       sum(vacdata[,4] == "NAÏVE"),
-#       sum(vacdata[,4] == "INFECTED")
-#     ),
-#     nrow = 2,
-#     ncol = 2,
-#     byrow = TRUE
-#   )
-#
-# navclasscorrect <- (classmatrix[1,1]/sum(classmatrix[1,]))*100
-#
-# vacclasscorrect <- (classmatrix[2,2]/sum(classmatrix[2,]))*100
-#
-# classmatrix <- matrix(c(classmatrix, navclasscorrect, vacclasscorrect), nrow = 2, ncol = 3)
-#
-# rownames(classmatrix) <- c("NAÏVE", "INFECTED")
-#
-# colnames(classmatrix) <- c("UNEXPOSED", "EXPOSED", "% CORRECT")
+classMat <- function(comb) {
+navmean <- mean(navpercs)
 
+navsd <- sd(navpercs)
+
+vacmean <- mean(vacpercs)
+
+vacsd <- sd(vacpercs)
+
+navnavdnorm <- dnorm(navpercs, mean=navmean, sd=navsd, log=FALSE)
+
+navvacdnorm <- dnorm(navpercs, mean=vacmean, sd=vacsd, log=FALSE)
+
+vacvacdnorm <- dnorm(vacpercs, mean=vacmean, sd=vacsd, log=FALSE)
+
+vacnavdnorm <- dnorm(vacpercs, mean=navmean, sd=navsd, log=FALSE)
+
+navclass <- ifelse(navnavdnorm>navvacdnorm, "NAÏVE", "INFECTED")
+
+vacclass <- ifelse(vacvacdnorm>vacnavdnorm, "INFECTED", "NAÏVE")
+
+navnavdnorm <- round(navnavdnorm, digits = 4)
+
+navvacdnorm <- round(navvacdnorm, digits = 4)
+
+vacvacdnorm <- round(vacvacdnorm, digits = 4)
+
+vacnavdnorm <- round(vacnavdnorm, digits = 4)
+
+navdata <- cbind(navpercs, navnavdnorm, navvacdnorm, navclass)
+
+vacdata <- cbind(vacpercs, vacvacdnorm, vacnavdnorm, vacclass)
+
+classmatrix <-
+  matrix(
+    c(
+      sum(navdata[,4] == "NAÏVE"), # assuming this is what kyle intended
+      sum(navdata[,4] == "INFECTED"),
+      sum(vacdata[,4] == "NAÏVE"),
+      sum(vacdata[,4] == "INFECTED")
+    ),
+    nrow = 2,
+    ncol = 2,
+    byrow = TRUE
+  )
+
+navclasscorrect <- (classmatrix[1,1]/sum(classmatrix[1,]))*100
+
+vacclasscorrect <- (classmatrix[2,2]/sum(classmatrix[2,]))*100
+
+classmatrix <- matrix(c(classmatrix, navclasscorrect, vacclasscorrect), nrow = 2, ncol = 3)
+
+rownames(classmatrix) <- c("NAÏVE", "INFECTED")
+
+colnames(classmatrix) <- c("UNEXPOSED", "EXPOSED", "% CORRECT")
+}
 # ** end of Kyle's method **
 
 # end_time <- Sys.time()
