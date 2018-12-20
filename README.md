@@ -14,6 +14,24 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
     * Mac OS X: https://cran.r-project.org/bin/macosx/
     * Linux: https://cran.r-project.org/bin/linux/
 
+- shiny package
+
+  * install by using the following R command:
+
+        > install.packages("shiny") 
+
+- hash package
+
+  * install by using the following R command:
+
+        > install.packages("hash")  
+        
+- ggplot2 package
+
+  * install by using the following R command:
+
+        > install.packages("ggplot2") 
+        
 - data.table package
 
   * install by using the following R command:
@@ -38,17 +56,8 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 * Click "Download ZIP" and extract the compressed ZIP file
 * Or you can clone with Git (https://help.github.com/articles/cloning-a-repository/)
 
-# Installing iCAT Package:
-
-* You can run the R script without installation 
 
 # Run iCAT Package:
 
-* Provide pre-vaccination tab-delimited files into Pre directory
-* Provide post-vaccination tab-delimited files into Post directory
-* Run R script as below
-* source("iCAT.r")
+* iCAT is implemented as Shiny application. The easiest way to run it is to have RStudio installed and doubl-click on `app.R`. Then, you will be able to hit a `Run App` button at the top toolbar. 
 
-# Output iCAT Package:
-
-* If you run the program, it automatically generate PDF histogram plot for frequency of receptor in naive and vaccinated samples.
