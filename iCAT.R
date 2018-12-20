@@ -6,6 +6,8 @@ library(ggplot2)
 
 start_time <- Sys.time()
 r <- c()
+lib <- c()
+
 #process files
 processFiles <- function(x, field) {
   fs <- strsplit(field, ' ')[[1]]
@@ -146,6 +148,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic) {
 
   #get final list
   finally <- all[all$pvals <= pval,]
+  lib <<- finally
   
 
   greplistpre <- lapply(prelist, function(x) {
@@ -342,7 +345,7 @@ pred <- function(comb, iccs, indpt, field) {
   for (i in 1:nums)
     idcounts[i] <-
     print(sum(unlist(
-      lapply(iccs$names, function(x)
+      lapply(lib$names, function(x)
         greplistppost[[i]][[x]])
     )))
   
@@ -375,5 +378,5 @@ pred <- function(comb, iccs, indpt, field) {
   class <- ifelse(idnavdnorm > idvacdnorm, "NAIVE", "INFECTED")
 
   
-  return(navclass)
+  return(class)
 }
