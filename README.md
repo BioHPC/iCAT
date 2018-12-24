@@ -59,11 +59,20 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 
 # Run iCAT Package:
 
-* iCAT is implemented as a Shiny application. The easiest way to run it is to have RStudio installed and double-click on `app.R`. Then, you will be able to hit a `Run App` button at the top toolbar.
+iCAT is implemented as a Shiny application. The easiest way to run it is to have RStudio installed.
+- Double-click on app.R to open it with RStudio
+- At the top of the editor, there will be a button with a green play icon `Run App`:
+    * Click the drop-down icon next to it
+    * Choose `Run External`
+- Click the `Run App` button
+
+The reason for running externally, using your browser, is that RStudio has a known issue with downloading data from an app. If you do not wish to download any results from iCAT, you can keep the `Run in Window` option.
+
 * Alternatively, using the R commandline:
 ```
 > setwd("FILE/PATH/TO/iCAT/")
 > library(shiny)
 > runApp("app.R")
+> 
 ```
 
