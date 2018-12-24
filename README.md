@@ -1,4 +1,4 @@
-# iCAT: Immune Cells Analysis software Tool
+## iCAT: Immune Cells Analysis software Tool
 
 High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. However, the nature of this process requires analysis of massive datasets that requires streamlining. Here we present ICAT, an R-based method for tackling this data and applying statistical analyses to find significant patterns and divergences.
 
@@ -8,7 +8,7 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 
 <br/>
 
-# Pre-requisites:
+### Pre-requisites:
 
 * R version
   * Download R (>3.4.0) version from CRAN.
@@ -16,41 +16,18 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
     * Mac OS X: https://cran.r-project.org/bin/macosx/
     * Linux: https://cran.r-project.org/bin/linux/
 
-libraries shiny package
+* Libraries:
+    - shiny
+    - shinyjs
+    - dplyr
+    - ggplot2
+    - data.table
+    - DT
+    - hash
 
-  * install by using the following R command:
+To install a package, you can use the following R command:
 
-        > install.packages("shiny") 
-
-- hash package
-
-  * install by using the following R command:
-
-        > install.packages("hash")  
-        
-- ggplot2 package
-
-  * install by using the following R command:
-
-        > install.packages("ggplot2") 
-        
-- data.table package
-
-  * install by using the following R command:
-
-        > install.packages("data.table")  
-
-- dplyr package
-
-  * install by using the following R command:
-
-        > install.packages("dplyr")  
-
-- plyr package
-
-  * install by using the following R command:
-
-        > install.packages("plyr")  
+        > install.packages("PACKAGE") 
 
 # Download iCAT Package:
 
