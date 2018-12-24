@@ -7,6 +7,34 @@ library(ggplot2)
 start_time <- Sys.time()
 r <- c()
 lib <- c()
+trnn <- c()
+trnp <- c()
+
+trnStats <- function(listPre, listPost, field) {
+  fs <- strsplit(field, ' ')[[1]]
+  
+  pre <- rbindlist(lapply(listPre, function(x) {
+    dat <- fread(x, select = c(fs, "count (templates)"))
+  }))
+  
+  DTpre <- as.data.table(pre)
+  pre <- DTpre[, lapply(.SD, sum), by = fs, .SDcols = "count (templates)"]
+  pref <- c(length(listPre), length(pre$`count (templates)`), sum(pre$`count (templates)`))
+  
+  post <- rbindlist(lapply(listPost, function(x) {
+    dat <- fread(x, select = c(fs, "count (templates)"))
+  }))
+  
+  DTpost <- as.data.table(post)
+  post <- DTpost[, lapply(.SD, sum), by = fs, .SDcols = "count (templates)"]
+  postf <- c(length(listPost), length(post$`count (templates)`), sum(post$`count (templates)`))
+  
+  both <- rbind(pref, postf)
+  colnames(both) <- c("# Samples", "# Clonotypes", "# Unique Sequences")
+  rownames(both) <- c("Negative", "Positive")
+  
+  return(both)
+}
 
 #process files
 processFiles <- function(x, field) {
@@ -37,6 +65,7 @@ readPre <- function(list, field) {
     return()
     
   }
+  
   fs <- strsplit(field, ' ')[[1]]
   #combine files and count repeats
   
@@ -51,7 +80,7 @@ readPre <- function(list, field) {
   colnames(final) <- "names"
   final <- final[, .N, by = names(final)]
   colnames(final) <- c("names", "naiveamounts")
-  #print(head(final))
+
   return(final)
 }
 
@@ -78,7 +107,7 @@ readPost <- function(list, field) {
 }
 
 
-analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic) {
+analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, updateProgress) {
   fs <- strsplit(field, ' ')[[1]]
   
   numpre <- length(prelist)
@@ -106,7 +135,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic) {
   
   #pull out fisher-test relevant values and run test
   fishervalues <- all[, c(2, 3, 6, 5)]
-  
+  updateProgress(detail = "Calculating p-value")
   # slow step...
   # instead of repeating fisher tests only do the unique ones then merge back
   uniquefishervalues <- unique(fishervalues[, 1:4])
@@ -147,6 +176,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic) {
   pval <- testvalue$pvals[which.max(testvalue$ratio)]
 
   #get final list
+  updateProgress(detail = "Separating sequence library")
   finally <- all[all$pvals <= pval,]
   lib <<- finally
   
@@ -182,24 +212,28 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic) {
   
   #find percentage of significant clonotypes
   navcounts <- list()
-  for (i in 1:numpre)
+  for (i in 1:numpre) {
+    updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
     navcounts[i] <-
     print(sum(unlist(
       lapply(finally$names, function(x)
         greplistpre[[i]][[x]])
     )))
+  }
 
   navtotals <- sapply(greplistpre, function(x) sum(values(x)))
   
   navpercs <- (as.numeric(navcounts) / navtotals) * 100
   
   vaccounts <- list()
-  for (i in 1:numpost)
+  for (i in 1:numpost) {
+    updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
     vaccounts[i] <-
     print(sum(unlist(
       lapply(finally$names, function(x)
         greplistppost[[i]][[x]])
     )))
+  }
   
   vactotals <- lapply(greplistppost, function(x) sum(values(x)))
   
@@ -214,23 +248,22 @@ plotHist <- function(comb) {
     ggplot(melt(comb), aes(x = value, fill = Var2)) +
     geom_histogram(color = 1) +
     labs(
-      title = "Percentage of Clonotypes",
-      y = "Frequency",
-      x = "Percentages",
+      y = "Frequency\n",
+      x = "\nPercentages",
       fill = element_blank()
     ) +
-    scale_fill_discrete(labels = c("Naive", "Vaccinated")) +
+    scale_fill_discrete(labels = c("Negative", "Positive")) +
     theme_classic() +
-    theme(panel.grid.major.y = element_line(color = 1, linetype = 'dashed')) +
+    theme(text = element_text(size=18),panel.grid.major.y = element_line(color = 1, linetype = 'dashed')) +
     scale_y_continuous(expand = c(0, 0))
   
   navvac_hist # this line outputs the plot if using a console/RStudio
   
 }
 
-savePlot <- function(plotIn) {
+savePlot <- function(file, plotIn) {
   ggsave(
-    filename = "HistClonotypes.pdf",
+    device = "pdf",
     plot = plotIn,
     width = 5,
     height = 5,
@@ -320,9 +353,11 @@ classMat <- function(comb) {
   classmatrix
 }
 
+getLib <- function() {
+  return(lib)
+}
 
-# INCORRECT PREDICTION FUNCTION
-pred <- function(comb, iccs, indpt, field) {
+pred <- function(comb, iccs, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)
   
@@ -378,5 +413,8 @@ pred <- function(comb, iccs, indpt, field) {
   class <- ifelse(idnavdnorm > idvacdnorm, "NAIVE", "INFECTED")
 
   
-  return(class)
+  df <- cbind(basename(names), class)
+  colnames(df) <- c("Sample", "Prediction")
+  
+  return(df)
 }
