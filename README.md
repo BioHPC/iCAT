@@ -47,7 +47,7 @@ iCAT is implemented as a Shiny application. The easiest way to run it is to have
 
 The reason for running externally, using your browser, is that RStudio has a known issue with downloading data from an app. If you do not wish to download any results from iCAT, you can keep the `Run in Window` option.
 
-* Alternatively, using the R commandline:
+Alternatively, using the R commandline:
 ```
 > setwd("FILE/PATH/TO/iCAT/")
 > library(shiny)
