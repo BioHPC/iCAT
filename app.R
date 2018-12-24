@@ -1,81 +1,209 @@
+jscode <- "
+shinyjs.disableTab = function(name) {
+
+var tab = $('.nav li a[data-value=' + name + ']');
+tab.bind('click.tab', function(e) {
+e.preventDefault();
+return false;
+});
+tab.addClass('disabled');
+}
+
+shinyjs.enableTab = function(name) {
+var tab = $('.nav li a[data-value=' + name + ']');
+tab.unbind('click.tab');
+tab.removeClass('disabled');
+}
+"
+
+css <- "
+.nav li a.disabled {
+background-color: #ccc !important;
+color: #aaa !important;
+cursor: not-allowed !important;
+border-color: #aaa !important;
+}"
+
 library(shiny)
+library(shinyjs)
 #library(DT)
 source("iCAT.R")
 options(warn=1)
 
-ui <- fluidPage(
-  titlePanel("iCAT Web App"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      fileInput("pre",
-                "Negative Training", multiple = TRUE,
-                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
-      ),
-      fileInput("post",
-                "Positive Training", multiple = TRUE,
-                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
-      ),
-      fileInput("indpt",
-                "Independent", multiple =T,
-                accept = c("text/tsv", "text/tab-seperated-values", ".tsv")),
-      radioButtons("field", "Analyze Clonotypes By:",
-                   choices= list("CDR3 Amino Acid Only" = "aminoAcid",
-                                 "TCRV-CDR3-TCRJ" = "aminoAcid vGeneName jGeneName",
-                                 "Nucleic Acid (DNA)" = "nucleotide")),
-      textInput("pcut", "Max p-value", value = 0.1),
-      textInput("thresh", "Min Threshold of Public Sequences", value = 1),
-      tags$hr(),
-      
-      actionButton("run", "Train Model"),
-      actionButton("pred", "Predict Independent Sample")
-    ),
-    
-    mainPanel(
-      tags$h3("Pre/Post Distributions: "),
-      plotOutput(outputId = "plot"),
-      br(),
-      br(),
-      tags$h3("Classification Matrix: "),
-      tableOutput('table'),
-      br(),
-      br(),
-      tags$h3("Independent Prediction: "),
-      textOutput('result')
-    )
-    
-  )
-)
 
-server <- function(input, output) {
+
+ui <- fluidPage(useShinyjs(),
+                extendShinyjs(text = jscode, functions =c("disableTab", "enableTab")),
+                inlineCSS(css),
+                titlePanel("iCAT"),
+                
+                tabsetPanel(id = 'navbar',
+                  tabPanel(title = "Training",
+                           id = "trnTab",
+                           fluid = T,
+                           sidebarLayout(
+                             sidebarPanel(
+                               fileInput(
+                                 "pre",
+                                 "Negative Training",
+                                 multiple = TRUE,
+                                 accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
+                               ),
+                               fileInput(
+                                 "post",
+                                 "Positive Training",
+                                 multiple = TRUE,
+                                 accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
+                               ),
+      
+                               radioButtons(
+                                 "field",
+                                 "Analyze Clonotypes By:",
+                                 choices = list(
+                                   "CDR3 Amino Acid Only" = "aminoAcid",
+                                   "TCRV-CDR3-TCRJ" = "aminoAcid vGeneName jGeneName",
+                                   "Nucleic Acid (DNA)" = "nucleotide"
+                                 )
+                               ),
+                               textInput("pcut", "Max p-value", value = 0.1),
+                               textInput("thresh", "Min Threshold of Public Sequences", value = 1),
+                               tags$hr(),
+                               
+                               actionButton("run", "Train Model")
+                             ),
+                             
+                             mainPanel(
+                               hidden(h4(id = 'h4', "Training Data Summary:")),
+                               tableOutput('trnTable'),
+                               hidden(h4(id = 'h1', "Pre/Post Distributions:")),
+                               plotOutput(outputId = "plot"),
+                               hidden(downloadButton('dnPlot', label="Download Plot")),
+                               br(),
+                               br(),
+                               hidden(h4(id = 'h2', "Classification Matrix: ")),
+                               tableOutput('table')
+                             )
+                             
+                           )
+                           ),
+                  
+                  tabPanel(
+                    title = "Library",
+                    value = "libTab",
+                    DT::dataTableOutput("library"),
+                    br(),
+                    hidden(downloadButton('dnLib', label="Download Table"))
+                  ),
+                  
+                  tabPanel(
+                    title = "Prediction",
+                    value = "predTab",
+                    fluid = T,
+                    sidebarLayout(
+                      sidebarPanel(
+                        fileInput(
+                          "indpt",
+                          "Independent Sample(s)",
+                          multiple = T,
+                          accept = c("text/tsv", "text/tab-separated-values", ".tsv")
+                        ),
+                        tags$hr(),
+                        actionButton("pred", "Predict Independent Sample")
+                      ),
+                      mainPanel(hidden(h4(
+                        id = "h3", "Prediction Results:"
+                      )),
+                      tableOutput('result'),
+                      br(),
+                      hidden(downloadButton('dnPred', label="Download Table"))
+                      )
+                    )
+                  )
+                )
+)
+                
+
+server <- function(input, output, session) {
+  
+  js$disableTab("predTab")
+  js$disableTab("libTab")
+  
   options(shiny.maxRequestSize=30*1024^2)
   
   both <- eventReactive(input$run, {
+    progress <- shiny::Progress$new(style = 'notification')
+    progress$set(message = "Training Procedure", value = 0)
+    on.exit(progress$close())
+    
+    updateProgress <- function(value = NULL, detail = NULL) {
+      if (is.null(value)) {
+        value <- progress$getValue()
+        value <-  value + (progress$getMax() - value) / 5
+      }
+      progress$set(value = value, detail = detail)
+    }
+    
+    updateProgress(detail = "Reading files")
     naive <- readPre(input$pre$datapath, input$field)
     vaccs <- readPost(input$post$datapath, input$field)
-    t1 <- Sys.time()
-    anl <- analyse(naive, vaccs, input$pre$datapath, input$post$datapath, input$field, input$pcut, input$thresh)
+
     
-    t2 <- Sys.time()
-    print(round(difftime(t2, t1, units = "secs"), digits = 2))
+    anl <- analyse(naive, vaccs, input$pre$datapath, input$post$datapath, input$field, input$pcut, input$thresh, updateProgress)
+    show("h1")
+    show("h2")
+    show("h4")
+    show("dnPlot")
+    show("dnLib")
+    show("libTab")
+    js$enableTab("predTab")
+    js$enableTab("libTab") 
     return(anl)
   })
   
   preds <- eventReactive(input$pred, {
-    
-    return(pred(both(), readPost(input$indpt$datapath, input$field), input$indpt$datapath, input$field))
+    show("h3")
+    return(pred(both(), readPost(input$indpt$datapath, input$field), input$indpt$datapath, input$indpt$name, input$field))
   })
   
   output$plot <- renderPlot({
     plotHist(both())
   })
-  
+  output$trnTable <- renderTable({
+    both()
+    trnStats(input$pre$datapath, input$post$datapath, input$field)
+  })
   output$table <- renderTable({
     classMat(both())
-  })
-  output$result  <- renderText({
+  },
+  include.rownames = T)
+  output$result  <- renderTable({
     preds()
   })
+  output$dnPred <- downloadHandler(
+    filename = "predictions.csv",
+    content = function(file) {
+      write.csv(preds(), file, row.names=F)
+    }
+  )
+  output$dnPlot <- downloadHandler(
+    filename = "clonotypes_distribution.png",
+    content = function(file) {
+      png(file)
+      print(plotHist(both()))
+      dev.off()
+    }
+  )
+  output$dnLib <- downloadHandler(
+    filename = "clonotypes_library.csv",
+    content = function(file) {
+      write.csv(getLib(), file, row.names=F)
+    }
+  )
+  output$library <- DT::renderDataTable({
+    DT::datatable(getLib())
+  },
+  options = list(scrollX = TRUE))
+
 }
 
 shinyApp(ui, server)
