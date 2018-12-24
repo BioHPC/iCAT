@@ -29,14 +29,14 @@ To install a package, you can use the following R command:
 
         > install.packages("PACKAGE") 
 
-# Download iCAT Package:
+### Download iCAT Package:
 
 * Click the "Clone or download" button located at top-right
 * Click "Download ZIP" and extract the compressed ZIP file
 * Or you can clone with Git (https://help.github.com/articles/cloning-a-repository/)
 
 
-# Run iCAT Package:
+### Run iCAT Package:
 
 iCAT is implemented as a Shiny application. The easiest way to run it is to have RStudio installed.
 - Double-click on app.R to open it with RStudio
