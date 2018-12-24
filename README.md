@@ -4,7 +4,7 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 
 <br/>
 
-![Alt text](/screenshot/icat.jpg?raw=true "Screeshot")
+![Alt text](/screenshot/icat.png?raw=true "Screeshot")
 
 <br/>
 
