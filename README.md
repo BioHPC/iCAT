@@ -1,10 +1,12 @@
 # iCAT: Immune Cells Analysis software Tool
 
-Dr. Richard DiPaolo, Dep. of Molecular Microbiology and Immunology, Saint Louis University School of Medicine<br />
-Dr. Kyle Wolf, Dep. of Molecular Microbiology and Immunology, Saint Louis University School of Medicine<br />
-Dr. Tae-Hyuk (Ted) Ahn, Dep. of Computer Science, Saint Louis University
-
 High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. However, the nature of this process requires analysis of massive datasets that requires streamlining. Here we present ICAT, an R-based method for tackling this data and applying statistical analyses to find significant patterns and divergences.
+
+<br/>
+
+![Alt text](/screenshot/icat.jpg?raw=true "Screeshot")
+
+<br/>
 
 # Pre-requisites:
 
@@ -14,7 +16,7 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
     * Mac OS X: https://cran.r-project.org/bin/macosx/
     * Linux: https://cran.r-project.org/bin/linux/
 
-- shiny package
+libraries shiny package
 
   * install by using the following R command:
 
@@ -73,6 +75,5 @@ The reason for running externally, using your browser, is that RStudio has a kno
 > setwd("FILE/PATH/TO/iCAT/")
 > library(shiny)
 > runApp("app.R")
-> 
 ```
 
