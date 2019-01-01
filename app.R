@@ -1,4 +1,5 @@
-jscode <- "
+jscode <- 
+"
 shinyjs.disableTab = function(name) {
 
 var tab = $('.nav li a[data-value=' + name + ']');
@@ -16,21 +17,21 @@ tab.removeClass('disabled');
 }
 "
 
-css <- "
+css <-
+"
 .nav li a.disabled {
 background-color: #ccc !important;
 color: #aaa !important;
 cursor: not-allowed !important;
 border-color: #aaa !important;
-}"
+}
+"
 
 library(shiny)
 library(shinyjs)
 #library(DT)
 source("iCAT.R")
 options(warn=1)
-
-
 
 ui <- fluidPage(useShinyjs(),
                 extendShinyjs(text = jscode, functions =c("disableTab", "enableTab")),
@@ -77,7 +78,8 @@ ui <- fluidPage(useShinyjs(),
                                tableOutput('trnTable'),
                                hidden(h4(id = 'h1', "Pre/Post Distributions:")),
                                plotOutput(outputId = "plot"),
-                               hidden(downloadButton('dnPlot', label="Download Plot")),
+                               div(style="display:inline-block", hidden(downloadButton('dnPlot', label="Plot PNG"))),
+                               div(style="display:inline-block", hidden(downloadButton('dnPlotPDF', label="Plot PDF"))),
                                br(),
                                br(),
                                hidden(h4(id = 'h2', "Classification Matrix: ")),
@@ -113,7 +115,7 @@ ui <- fluidPage(useShinyjs(),
                       mainPanel(hidden(h4(
                         id = "h3", "Prediction Results:"
                       )),
-                      tableOutput('result'),
+                      DT::dataTableOutput('result'),
                       br(),
                       hidden(downloadButton('dnPred', label="Download Table"))
                       )
@@ -124,13 +126,14 @@ ui <- fluidPage(useShinyjs(),
                 
 
 server <- function(input, output, session) {
-  
   js$disableTab("predTab")
   js$disableTab("libTab")
   
   options(shiny.maxRequestSize=30*1024^2)
   
   both <- eventReactive(input$run, {
+    validate(need(input$pre !="", "Please select negative samples"),
+               need(input$post != "", "Please select postive samples" ))
     progress <- shiny::Progress$new(style = 'notification')
     progress$set(message = "Training Procedure", value = 0)
     on.exit(progress$close())
@@ -153,8 +156,10 @@ server <- function(input, output, session) {
     show("h2")
     show("h4")
     show("dnPlot")
+    show("dnPlotPDF")
     show("dnLib")
     show("libTab")
+    
     js$enableTab("predTab")
     js$enableTab("libTab") 
     return(anl)
@@ -162,33 +167,50 @@ server <- function(input, output, session) {
   
   preds <- eventReactive(input$pred, {
     show("h3")
+    show("dnPred")
     return(pred(both(), readPost(input$indpt$datapath, input$field), input$indpt$datapath, input$indpt$name, input$field))
   })
   
   output$plot <- renderPlot({
     plotHist(both())
   })
+  
   output$trnTable <- renderTable({
     both()
     trnStats(input$pre$datapath, input$post$datapath, input$field)
-  })
+  }, rownames = T)
   output$table <- renderTable({
     classMat(both())
   },
   include.rownames = T)
-  output$result  <- renderTable({
-    preds()
+  output$result  <- DT::renderDataTable({
+    DT::datatable(preds()) %>%
+      DT::formatStyle(
+        'Prediction',
+        target = 'row',
+        color = DT::styleEqual(c("Negative", "Positive"), c('blue', 'red'))
+      )
   })
+  
   output$dnPred <- downloadHandler(
     filename = "predictions.csv",
     content = function(file) {
       write.csv(preds(), file, row.names=F)
     }
   )
+  
   output$dnPlot <- downloadHandler(
     filename = "clonotypes_distribution.png",
     content = function(file) {
       png(file)
+      print(plotHist(both()))
+      dev.off()
+    }
+  )
+  output$dnPlotPDF <- downloadHandler(
+    filename = "clonotypes_distribution.pdf",
+    content = function(file) {
+      pdf(file)
       print(plotHist(both()))
       dev.off()
     }
@@ -199,11 +221,13 @@ server <- function(input, output, session) {
       write.csv(getLib(), file, row.names=F)
     }
   )
+
   output$library <- DT::renderDataTable({
+    both()
     DT::datatable(getLib())
   },
+  
   options = list(scrollX = TRUE))
-
 }
 
 shinyApp(ui, server)
