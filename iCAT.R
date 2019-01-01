@@ -61,9 +61,7 @@ listDir <- function (dir) {
 
 readPre <- function(list, field) {
   if (length(list) == 0) {
-    message("Error in locating Naive Files")
-    return()
-    
+    return(NULL)
   }
   
   fs <- strsplit(field, ' ')[[1]]
@@ -73,22 +71,19 @@ readPre <- function(list, field) {
   final <- rbindlist(final)
   x <- rep("", length(final[[1]]))
   for (i in 1:length(fs))
-    x <- unlist(lapply(paste(x, final[[i]]), function(t) substring(t, 2)))
-  
+    x <- paste(x, final[[i]])
+  x <- substring(x, 2)
   final <-
     data.table(x)
   colnames(final) <- "names"
   final <- final[, .N, by = names(final)]
   colnames(final) <- c("names", "naiveamounts")
-
   return(final)
 }
 
 readPost <- function(list, field) {
   if (length(list) == 0) {
-    message("Error in locating Naive Files")
-    return()
-    
+    return(NULL)
   }
   
   #combine files and count repeats
@@ -97,7 +92,8 @@ readPost <- function(list, field) {
   final <- rbindlist(final)
   x <- rep("", length(final[[1]]))
   for (i in 1:length(fs))
-    x <- unlist(lapply(paste(x, final[[i]]), function(t) substring(t, 2)))
+    x <- paste(x, final[[i]])
+  x <- substring(x, 2)
   final <-
     data.table(x)
   colnames(final) <- "names"
@@ -150,6 +146,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
       by = c("vaccamounts", "naiveamounts", "vaccabsent",   "naiveabsent"),
       sort = FALSE
     )
+  
   uniquefishervalues$sumcv <-
     lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$vaccamounts[pvalfishies$pvals <= x]))
   uniquefishervalues$covvac <- 
@@ -185,7 +182,8 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
     dat <- fread(x, select = c(fs))
     x <- rep("", length(dat[[1]]))
     for (i in 1:length(fs))
-      x <- unlist(lapply(paste(x, dat[[i]]), function(t) substring(t, 2)))
+      x <- paste(x, dat[[i]])
+    x <- substring(x, 2)
     dat <-
       data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
@@ -199,7 +197,8 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
     dat <- fread(x, select = fs)
     x <- rep("", length(dat[[1]]))
     for (i in 1:length(fs))
-      x <- unlist(lapply(paste(x, dat[[i]]), function(t) substring(t, 2)))
+      x <-paste(x, dat[[i]])
+    x <- substring(x, 2)
     dat <-
       data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
@@ -238,14 +237,14 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   vactotals <- lapply(greplistppost, function(x) sum(values(x)))
   
   vacpercs <- (as.numeric(vaccounts) / as.numeric(vactotals)) * 100
-  r <<- cbind(navpercs, vacpercs )
-  return(cbind(navpercs, vacpercs))
+  r <<- list(n=navpercs, v=vacpercs )
+  return(list(n=navpercs, v=vacpercs))
 }
 
 # swithed to ggplot for flexibility
 plotHist <- function(comb) {
   navvac_hist <-
-    ggplot(melt(comb), aes(x = value, fill = Var2)) +
+    ggplot(melt(comb), aes(x = value, fill = L1)) +
     geom_histogram(color = 1) +
     labs(
       y = "Frequency\n",
@@ -258,7 +257,6 @@ plotHist <- function(comb) {
     scale_y_continuous(expand = c(0, 0))
   
   navvac_hist # this line outputs the plot if using a console/RStudio
-  
 }
 
 savePlot <- function(file, plotIn) {
@@ -274,8 +272,8 @@ savePlot <- function(file, plotIn) {
 
 # Kyle's Method (modified to compile)
 classMat <- function(comb) {
-  navpercs <- comb[,1]
-  vacpercs <- comb[,2]
+  navpercs <- comb$n
+  vacpercs <- comb$v
   
   navmean <- mean(navpercs)
   
@@ -325,7 +323,6 @@ classMat <- function(comb) {
     matrix(
       c(
         sum(navdata[, 4] == "NAIVE"),
-        # assuming this is what kyle meant
         sum(navdata[, 4] == "INFECTED"),
         sum(vacdata[, 4] == "NAIVE"),
         sum(vacdata[, 4] == "INFECTED")
@@ -346,9 +343,9 @@ classMat <- function(comb) {
       ncol = 3
     )
   
-  rownames(classmatrix) <- c("NAIVE", "INFECTED")
+  rownames(classmatrix) <- c("Negative", "Positive")
   
-  colnames(classmatrix) <- c("UNEXPOSED", "EXPOSED", "% CORRECT")
+  colnames(classmatrix) <- c("Unexposed", "Exposed", "% Correct")
   
   classmatrix
 }
@@ -365,7 +362,8 @@ pred <- function(comb, iccs, indpt, names, field) {
     dat <- fread(x, select = fs)
     x <- rep("", length(dat[[1]]))
     for (i in 1:length(fs))
-      x <- unlist(lapply(paste(x, dat[[i]]), function(t) substring(t, 2)))
+      x <- paste(x, dat[[i]])
+    x <- substring(x, 2)
     dat <-
       data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
@@ -374,7 +372,7 @@ pred <- function(comb, iccs, indpt, names, field) {
     return(h)
   })
   
-  
+print(greplistppost)
   
   idcounts <- list()
   for (i in 1:nums)
@@ -388,8 +386,8 @@ pred <- function(comb, iccs, indpt, names, field) {
   
   idpercs <- (as.numeric(idcounts) / as.numeric(idtotals)) * 100
 
-  navpercs <- comb[,1]
-  vacpercs <- comb[,2]
+  navpercs <- comb$n
+  vacpercs <- comb$v
   
   navmean <- mean(navpercs)
   
@@ -410,11 +408,11 @@ pred <- function(comb, iccs, indpt, names, field) {
                        sd = vacsd,
                        log = FALSE)
  
-  class <- ifelse(idnavdnorm > idvacdnorm, "NAIVE", "INFECTED")
+  class <- ifelse(idnavdnorm > idvacdnorm, "Negative", "Positive")
 
   
-  df <- cbind(basename(names), class)
-  colnames(df) <- c("Sample", "Prediction")
+  df <- cbind(basename(names), class, idpercs)
+  colnames(df) <- c("Sample", "Prediction", "% VATS")
   
   return(df)
 }
