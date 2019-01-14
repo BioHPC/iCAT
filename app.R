@@ -62,7 +62,7 @@ ui <- fluidPage(useShinyjs(),
                                  "Analyze Clonotypes By:",
                                  choices = list(
                                    "CDR3 Amino Acid Only" = "aminoAcid",
-                                   "TCRV-CDR3-TCRJ" = "aminoAcid vGeneName jGeneName",
+                                   "TCRV-CDR3-TCRJ" = "vGeneName aminoAcid jGeneName",
                                    "Nucleic Acid (DNA)" = "nucleotide"
                                  )
                                ),
@@ -70,7 +70,10 @@ ui <- fluidPage(useShinyjs(),
                                textInput("thresh", "Min Threshold of Public Sequences", value = 1),
                                tags$hr(),
                                
-                               actionButton("run", "Train Model")
+                               actionButton("run", "Train Model"),
+                               br(),
+                               br(),
+                               div(hidden(downloadButton('dnScreen', label="Save Parameters", style='padding-left:125px; padding-right:125px')))
                              ),
                              
                              mainPanel(
@@ -94,7 +97,7 @@ ui <- fluidPage(useShinyjs(),
                     value = "libTab",
                     DT::dataTableOutput("library"),
                     br(),
-                    hidden(downloadButton('dnLib', label="Download Table"))
+                    hidden(downloadButton('dnLib', label="Table"))
                   ),
                   
                   tabPanel(
@@ -117,13 +120,12 @@ ui <- fluidPage(useShinyjs(),
                       )),
                       DT::dataTableOutput('result'),
                       br(),
-                      hidden(downloadButton('dnPred', label="Download Table"))
+                      hidden(downloadButton('dnPred', label="Table"))
                       )
                     )
                   )
                 )
 )
-                
 
 server <- function(input, output, session) {
   js$disableTab("predTab")
@@ -149,7 +151,6 @@ server <- function(input, output, session) {
     updateProgress(detail = "Reading files")
     naive <- readPre(input$pre$datapath, input$field)
     vaccs <- readPost(input$post$datapath, input$field)
-
     
     anl <- analyse(naive, vaccs, input$pre$datapath, input$post$datapath, input$field, input$pcut, input$thresh, updateProgress)
     show("h1")
@@ -158,6 +159,7 @@ server <- function(input, output, session) {
     show("dnPlot")
     show("dnPlotPDF")
     show("dnLib")
+    show("dnScreen")
     show("libTab")
     
     js$enableTab("predTab")
@@ -205,6 +207,23 @@ server <- function(input, output, session) {
       png(file)
       print(plotHist(both()))
       dev.off()
+    }
+  )
+  output$dnScreen <- downloadHandler(
+    filename = paste("iCAT_report_", Sys.time(), ".txt", sep = ""),
+    content = function(file) {
+      cat(paste("iCAT Run on ", Sys.time()), file=file, sep="\n")
+      cat("\nNegative Files:", file=file, append=T, sep="\n")
+      cat(input$pre$name, file=file, append=T, sep="\n")
+      cat("\nPositive Files:", file=file, append=T, sep="\n")
+      cat(input$post$name, file=file, append=T, sep="\n")
+      cat("\nField:", file=file, append=T, sep="\n")
+      cat(input$field, file=file, append=T, sep="\n")
+      cat("\nMax PValue:", file=file, append=T, sep="\n")
+      cat(input$pcut, file=file, append=T, sep="\n")
+      cat("\nMin Threshold of Public Sequences:", file=file, append=T, sep="\n")
+      cat(input$thresh, file=file, append=T, sep="\n")
+      
     }
   )
   output$dnPlotPDF <- downloadHandler(
