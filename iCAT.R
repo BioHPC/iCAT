@@ -161,11 +161,11 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   #all <- all[order(pvalfishies)]
   #grep for only viable sequences
   all <- all[c(grep("^[A-Z*]", all$names)),]
-  all <- transform(all, Cv = ave(vaccamounts, FUN = cumsum))
+  #all <- transform(all, Cv = ave(vaccamounts, FUN = cumsum))
   
-  all <- transform(all, Cn = ave(naiveamounts, FUN = cumsum))
+  #all <- transform(all, Cn = ave(naiveamounts, FUN = cumsum))
   
-  uniquefishervalues$ratio <- ifelse(uniquefishervalues$covnav < minpublic,
+  uniquefishervalues$ratio <- ifelse(uniquefishervalues$covnav < 1,
                                      uniquefishervalues$covvac,
                                      uniquefishervalues$covvac/uniquefishervalues$covnav)
 
@@ -175,6 +175,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   #get final list
   updateProgress(detail = "Separating sequence library")
   finally <- all[all$pvals <= pval,]
+  finally <- finally[finally$vaccamounts >= minpublic,]
   lib <<- finally
   
 
@@ -251,9 +252,9 @@ plotHist <- function(comb) {
       x = "\nPercentages",
       fill = element_blank()
     ) +
-    scale_fill_discrete(labels = c("Negative", "Positive")) +
+    scale_fill_manual(values=c("royalblue1", "tomato1"), labels = c("Negative", "Positive")) +
     theme_classic() +
-    theme(text = element_text(size=18),panel.grid.major.y = element_line(color = 1, linetype = 'dashed')) +
+    theme(text = element_text(size=18), panel.grid.major.y = element_line(color = 1, linetype = 'dashed')) +
     scale_y_continuous(expand = c(0, 0))
   
   navvac_hist # this line outputs the plot if using a console/RStudio
@@ -275,9 +276,12 @@ classMat <- function(comb) {
   navpercs <- comb$n
   vacpercs <- comb$v
   
+
   navmean <- mean(navpercs)
+  navmean <- navmean * 3 # accounting for overfitting
   
   navsd <- sd(navpercs)
+  navsd <- navsd * 3 # accounting for overfitting
   
   vacmean <- mean(vacpercs)
   
@@ -351,7 +355,9 @@ classMat <- function(comb) {
 }
 
 getLib <- function() {
-  return(lib)
+  l <- lib[, unique(colnames(lib)), with=FALSE]
+  colnames(l) <- c("Sequence",	"Positive Amount",	"Negative Amount",	"Total",	"Negative Absent",	"Positive Absent",	"PValue")
+  return(l)
 }
 
 pred <- function(comb, iccs, indpt, names, field) {
@@ -373,7 +379,6 @@ pred <- function(comb, iccs, indpt, names, field) {
   })
   
 print(greplistppost)
-  
   idcounts <- list()
   for (i in 1:nums)
     idcounts[i] <-
@@ -390,8 +395,10 @@ print(greplistppost)
   vacpercs <- comb$v
   
   navmean <- mean(navpercs)
+  navmean <- navmean * 3 # accounting for overfitting
   
   navsd <- sd(navpercs)
+  navsd <- navsd * 3 # accounting for overfitting
   
   vacmean <- mean(vacpercs)
   
