@@ -356,7 +356,8 @@ classMat <- function(comb) {
 
 getLib <- function() {
   l <- lib[, unique(colnames(lib)), with=FALSE]
-  colnames(l) <- c("Sequence",	"Positive Amount",	"Negative Amount",	"Total",	"Negative Absent",	"Positive Absent",	"PValue")
+  colnames(l) <- c("Sequence",	"Positive Present",	"Negative Present",	"Total",	"Negative Absent",	"Positive Absent",	"P-Value")
+  l <- l[, c(1, 2, 6, 3, 5, 7), with=FALSE]
   return(l)
 }
 
@@ -419,7 +420,7 @@ print(greplistppost)
 
   
   df <- cbind(basename(names), class, idpercs)
-  colnames(df) <- c("Sample", "Prediction", "% VATS")
+  colnames(df) <- c("Sample", "Prediction", "% TARS")
   
   return(df)
 }
