@@ -79,6 +79,7 @@ ui <- fluidPage(useShinyjs(),
                              mainPanel(
                                hidden(h4(id = 'h4', "Training Data Summary:")),
                                tableOutput('trnTable'),
+                               hidden(downloadButton('dnSummary', label="Table")),
                                hidden(h4(id = 'h1', "Pre/Post Distributions:")),
                                plotOutput(outputId = "plot"),
                                div(style="display:inline-block", hidden(downloadButton('dnPlot', label="Plot PNG"))),
@@ -86,7 +87,8 @@ ui <- fluidPage(useShinyjs(),
                                br(),
                                br(),
                                hidden(h4(id = 'h2', "Classification Matrix: ")),
-                               tableOutput('table')
+                               tableOutput('table'),
+                               hidden(downloadButton('dnClass', label="Table"))
                              )
                              
                            )
@@ -113,7 +115,7 @@ ui <- fluidPage(useShinyjs(),
                           accept = c("text/tsv", "text/tab-separated-values", ".tsv")
                         ),
                         tags$hr(),
-                        actionButton("pred", "Predict Independent Sample")
+                        actionButton("pred", "Predict Independent Sample(s)")
                       ),
                       mainPanel(hidden(h4(
                         id = "h3", "Prediction Results:"
@@ -161,6 +163,8 @@ server <- function(input, output, session) {
     show("dnLib")
     show("dnScreen")
     show("libTab")
+    show("dnSummary")
+    show("dnClass")
     
     js$enableTab("predTab")
     js$enableTab("libTab") 
@@ -200,10 +204,24 @@ server <- function(input, output, session) {
       write.csv(preds(), file, row.names=F)
     }
   )
+  output$dnClass <- downloadHandler(
+    filename = "classification_matrix.csv",
+    content = function(file) {
+      write.csv(classMat(both()), file, row.names=T)
+    }
+  )
+  output$dnSummary <- downloadHandler(
+    filename = "training_summary.csv",
+    content = function(file) {
+      both()
+      write.csv(trnStats(input$pre$datapath, input$post$datapath, input$field), file, row.names=T)
+    }
+  )
   
   output$dnPlot <- downloadHandler(
     filename = "clonotypes_distribution.png",
     content = function(file) {
+      both()
       png(file)
       print(plotHist(both()))
       dev.off()
