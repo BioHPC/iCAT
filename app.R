@@ -36,7 +36,8 @@ options(warn=1)
 ui <- fluidPage(useShinyjs(),
                 extendShinyjs(text = jscode, functions =c("disableTab", "enableTab")),
                 inlineCSS(css),
-                titlePanel("iCAT"),
+                
+                img(src='cat2.png', height=120, width=160, hspace = 5, vspace = 5),
                 
                 tabsetPanel(id = 'navbar',
                   tabPanel(title = "Training",
@@ -133,7 +134,7 @@ server <- function(input, output, session) {
   js$disableTab("predTab")
   js$disableTab("libTab")
   
-  options(shiny.maxRequestSize=30*1024^2)
+  options(shiny.maxRequestSize=3000*1024^2)
   
   both <- eventReactive(input$run, {
     validate(need(input$pre !="", "Please select negative samples"),
