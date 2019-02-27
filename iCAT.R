@@ -7,14 +7,14 @@ library(ggplot2)
 start_time <- Sys.time()
 r <- c()
 lib <- c()
-trnn <- c()
-trnp <- c()
+n <- c()
+p <- c()
 
 trnStats <- function(listPre, listPost, field) {
   fs <- strsplit(field, ' ')[[1]]
   
   pre <- rbindlist(lapply(listPre, function(x) {
-    dat <- fread(x, select = c(fs, "count (templates)"))
+    dat <- fread(x, select = c(fs, "count (templates)", "copy"))
   }))
   
   DTpre <- as.data.table(pre)
@@ -40,13 +40,16 @@ trnStats <- function(listPre, listPost, field) {
 processFiles <- function(x, field) {
   fs <- strsplit(field, ' ')[[1]]
   # get sequenceStatus column to use as filter, then remove it
-  dat <-
-    fread(x,
-          select = c(fs, "sequenceStatus"))
+  #dat <- readLines(x)
+  #dat <- dat[grep('^[A-Za-z]', dat)]
+  #dat <- read.table(textConnection(dat), sep="\t", header=T)
+  #dat <- select(dat, fs, "sequenceStatus")
+  dat <- fread(x, select = c(fs, "sequenceStatus"))
   dat <- dat[dat$sequenceStatus == "In",]
   dat <- dat[, 1:length(fs)]
   dat <- dat[!duplicated(dat),]
   dat <- dat[order(dat[,1:length(fs)]),]
+  #print(dat)
 }
 
 listDir <- function (dir) {
@@ -104,6 +107,7 @@ readPost <- function(list, field) {
 
 
 analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, updateProgress) {
+  
   fs <- strsplit(field, ' ')[[1]]
   
   numpre <- length(prelist)
@@ -126,12 +130,11 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   vaccabsent <- numpost - all$`vaccamounts`
   #bind those numbers to the rest of the table
   all <- cbind(all, naiveabsent, vaccabsent)
-  
-  
+
   
   #pull out fisher-test relevant values and run test
   fishervalues <- all[, c(2, 3, 6, 5)]
-  updateProgress(detail = "Calculating p-value")
+  #updateProgress(detail = "Calculating p-value")
   # slow step...
   # instead of repeating fisher tests only do the unique ones then merge back
   uniquefishervalues <- unique(fishervalues[, 1:4])
@@ -146,6 +149,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
       by = c("vaccamounts", "naiveamounts", "vaccabsent",   "naiveabsent"),
       sort = FALSE
     )
+
   
   uniquefishervalues$sumcv <-
     lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$vaccamounts[pvalfishies$pvals <= x]))
@@ -155,12 +159,15 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
     lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$naiveamounts[pvalfishies$pvals <= x]))
   uniquefishervalues$covnav <- as.numeric(uniquefishervalues$sumcn) / numpre
 
+
   
   #bind p values to table
   all <- cbind(all, pvalfishies)
+
   #all <- all[order(pvalfishies)]
   #grep for only viable sequences
   all <- all[c(grep("^[A-Z*]", all$names)),]
+
   #all <- transform(all, Cv = ave(vaccamounts, FUN = cumsum))
   
   #all <- transform(all, Cn = ave(naiveamounts, FUN = cumsum))
@@ -169,13 +176,17 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
                                      uniquefishervalues$covvac,
                                      uniquefishervalues$covvac/uniquefishervalues$covnav)
 
-  testvalue <- subset(uniquefishervalues, uniquefishervalues$pvals < pcut)
+  
+  testvalue <- subset(uniquefishervalues, uniquefishervalues$pvals < as.double(pcut))
+
+  
   pval <- testvalue$pvals[which.max(testvalue$ratio)]
 
   #get final list
-  updateProgress(detail = "Separating sequence library")
+  #updateProgress(detail = "Separating sequence library")
   finally <- all[all$pvals <= pval,]
-  finally <- finally[finally$vaccamounts >= minpublic,]
+  finally <- finally[finally$vaccamounts >= as.numeric(minpublic),]
+
   lib <<- finally
   
 
@@ -213,7 +224,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   #find percentage of significant clonotypes
   navcounts <- list()
   for (i in 1:numpre) {
-    updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
+    #updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
     navcounts[i] <-
     print(sum(unlist(
       lapply(finally$names, function(x)
@@ -227,7 +238,7 @@ analyse <- function(naive, vaccs, prelist, postlist, field, pcut, minpublic, upd
   
   vaccounts <- list()
   for (i in 1:numpost) {
-    updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
+    #updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
     vaccounts[i] <-
     print(sum(unlist(
       lapply(finally$names, function(x)
@@ -405,7 +416,6 @@ print(greplistppost)
   
   vacsd <- sd(vacpercs)
   
-  # currently, these are 0. idperc is too high
   idnavdnorm <- dnorm(idpercs,
                        mean = navmean,
                        sd = navsd,
