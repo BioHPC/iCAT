@@ -1,0 +1,23 @@
+Package: iCAT
+Title: immune Cell Analysis Tool
+Version: 0.0.2
+Authors@R: 
+    person(given = "Ahmad",
+           family = "Rajeh",
+           role = c("aut", "cre"),
+           email = "ahmadrjeh@gmail.com")
+Description: Interactive interface to uploaded labeled TCR-sequencing clonotype lists,
+             find significant target-associated TCR sequences, and allow prediction of
+             independent samples.
+Imports:
+	shiny,
+	shinyjs,
+	dplyr,
+	ggplot2,
+	data.table,
+	DT,
+	hash
+License: LICENSEX
+Encoding: UTF-8
+LazyData: false
+RoxygenNote: 6.1.1.9000
