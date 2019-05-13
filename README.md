@@ -17,40 +17,18 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
     * Linux: https://cran.r-project.org/bin/linux/
 
 * Libraries:
-    - shiny
-    - shinyjs
-    - dplyr
-    - ggplot2
-    - data.table
-    - DT
-    - hash
+    - devtools
 
-To install a package, you can use the following R command:
+To install it, use the command:
 
-        > install.packages("PACKAGE") 
+        > install.packages("devtools") 
 
 ### Download iCAT Package:
 
-* Click the "Clone or download" button located at top-right
-* Click "Download ZIP" and extract the compressed ZIP file
-* Or you can clone with Git (https://help.github.com/articles/cloning-a-repository/)
+        > devtools::install_github("BioHPC/iCAT") 
 
 
 ### Run iCAT Package:
 
-iCAT is implemented as a Shiny application. The easiest way to run it is to have RStudio installed.
-- Double-click on app.R to open it with RStudio
-- At the top of the editor, there will be a button with a green play icon `Run App`:
-    * Click the drop-down icon next to it
-    * Choose `Run External`
-- Click the `Run App` button
-
-The reason for running externally, using your browser, is that RStudio has a known issue with downloading data from an app. If you do not wish to download any results from iCAT, you can keep the `Run in Window` option.
-
-Alternatively, using the R commandline:
-```
-> setwd("FILE/PATH/TO/iCAT/")
-> library(shiny)
-> runApp("app.R")
-```
+        > iCATinteractive()
 
