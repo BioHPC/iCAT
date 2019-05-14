@@ -30,5 +30,6 @@ To install it, use the command:
 
 ### Run iCAT Package:
 
+        > library(iCAT)
         > iCATinteractive()
 
