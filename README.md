@@ -19,11 +19,11 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 * Libraries:
     - devtools
 
-To install it, use the command:
+To install devtools, use the command:
 
         > install.packages("devtools") 
 
-### Download iCAT Package:
+### Download/Install iCAT Package:
 
         > devtools::install_github("BioHPC/iCAT") 
 
