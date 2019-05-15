@@ -7,8 +7,8 @@
 #' @export
 iCATinteractive <- function() {
 
-  print(getwd())
-  shiny::runApp('app', quiet=TRUE, launch.browser=TRUE)
+  dir <- system.file("app", package = "iCAT")
+  shiny::runApp(dir, quiet=TRUE, launch.browser=TRUE)
 }
 
 
