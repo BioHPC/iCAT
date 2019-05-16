@@ -9,12 +9,13 @@ Authors@R:
 Description: Interactive interface to uploaded labeled TCR-sequencing clonotype lists,
              find significant target-associated TCR sequences, and allow prediction of
              independent samples.
+Depends:
+	data.table
 Imports:
 	shiny,
 	shinyjs,
 	dplyr,
 	ggplot2,
-	data.table,
 	DT,
 	hash
 License: LICENSEX
