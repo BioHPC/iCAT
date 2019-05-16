@@ -11,3 +11,5 @@ export(savePlot)
 export(train)
 export(trnStats)
 export(tsvDir)
+
+import(data.table)
