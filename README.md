@@ -64,14 +64,62 @@ A progress bar will show on the bottom-right corner to update on the satatus of 
 
 **Library:**
 
-The _library_ tab displays a table consisting of the "target associated receptor sequences" (TARS), determined to be statistically associated with exposure to the target/agent/pathogen. The table displays each sequence, number of positive and negative training samples the sequence is present in/absent from, and how statistically associated the sequence is to the positive training data (*p*-value). The table can be downloaded to the user's computer for further analysis using excel, commandline, etc using the download `Table` button below the table.
+The _Library_ tab displays a table consisting of the "target associated receptor sequences" (TARS), determined to be statistically associated with exposure to the target/agent/pathogen. The table displays each sequence, number of positive and negative training samples the sequence is present in/absent from, and how statistically associated the sequence is to the positive training data (*p*-value). The table can be downloaded to the user's computer for further analysis using excel, commandline, etc using the download `Table` button below the table.
 
 **Prediction:**
 
-The prediction function allows the user to add sequencing data from unknown samples (e.g. not included in the previous training data) for classification as "Positive" or "Negative" and determining the accuracy of the diagnostic assay.
+The _Prediction_ tab allows the user to add sequencing data from unknown samples (e.g. not included in the previous training data) for classification as "Positive" or "Negative" and determining the accuracy of the diagnostic assay.
 
 1)	Use the `Browse` button to add samples for prediction. Multiple samples may be uploaded simultaneously.
 2)	Click `Predict Independent Sample`.
 
 A table will appear after analysis is complete. The table displays sample names along with the prediction "Positive" (red)/ "Negative" (blue), and displays the ‘%TARS’: the percent of individual sequences from the sample that are included in the TARS library. The prediction results can be downloaded as a table.
 
+## R-interface Workflow
+
+After loading iCAT with `library(iCAT)`
+
+1) Define the parameters you would like to use for building the model:
+
+       > FIELD <- "vGeneName aminoAcid jGeneName"
+       > P_CUTOFF <- 0.1
+       > MIN_PUBLIC <- 2
+       
+2) Make lists of .tsv Positive and Negative training samples:
+
+       > listPos <- tsvDir("path/to/positve/samples/")
+       > listNeg <- tsvDir("path/to/negative/samples/")
+       
+2.1) _optional_ Collect summary statistics about training samples:
+
+       > trnStats(listPos, listNeg, FIELD)
+       #>         # Samples # Clonotypes # Unique Sequences
+       #>Negative         9       101942             281336
+       #>Positive         9        34158              89150
+       
+3) Read in Positive and Negative training samples:
+
+       > naive <- readTrn(listPos, FIELD, "naive")
+       > vaccs <- readTrn(listNeg, FIELD, "vacc")
+       
+4) Build a model using the training data:
+      
+       > mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+       
+4.1) _optional_ Produce a table estimating the classification accuracy of the model: 
+
+       > classMat(mod)
+       
+4.2) _optional_ Produce a figure showing % of TCR associated with positve samples in positive and negative samples:
+    
+       > plotHist(mod)
+       
+4.3) _optional_ Produce the library of TCR sequences associated with positve samples:
+
+       > getLib(mod)
+       
+5) Predict sample(s) exposure based on model:
+
+       > pred(mod, vaccs, "path/to/unknown", "unknown-name.tsv", FIELD)
+       
+       
