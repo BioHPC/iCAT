@@ -90,7 +90,8 @@ After loading iCAT with `library(iCAT)`
        > listPos <- tsvDir("path/to/positve/samples/")
        > listNeg <- tsvDir("path/to/negative/samples/")
        
-2.1) _optional_ Collect summary statistics about training samples:
+
+ - _optional_ Collect summary statistics about training samples:
 
        > trnStats(listPos, listNeg, FIELD)
        #>         # Samples # Clonotypes # Unique Sequences
@@ -106,15 +107,15 @@ After loading iCAT with `library(iCAT)`
       
        > mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
        
-4.1) _optional_ Produce a table estimating the classification accuracy of the model: 
+ - _optional_ Produce a table estimating the classification accuracy of the model: 
 
        > classMat(mod)
        
-4.2) _optional_ Produce a figure showing % of TCR associated with positve samples in positive and negative samples:
+ - _optional_ Produce a figure showing % of TCR associated with positve samples in positive and negative samples:
     
        > plotHist(mod)
        
-4.3) _optional_ Produce the library of TCR sequences associated with positve samples:
+ - _optional_ Produce the library of TCR sequences associated with positve samples:
 
        > getLib(mod)
        
