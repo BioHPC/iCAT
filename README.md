@@ -43,6 +43,9 @@ This will launch a graphical user interface (GUI) for iCAT. The GUI has three ta
 
 **Training:**
 
+![Alt text](/screenshot/icat.png?raw=true "Training")
+
+
 1) In the _Training_ tab, enter your negative training samples (naïve, unexposed, uninfected, pre-infection, etc) using the `Browse` button.
 
 Individual samples’ sequencing data should be in .tsv format.
@@ -64,9 +67,13 @@ A progress bar will show on the bottom-right corner to update on the satatus of 
 
 **Library:**
 
+![Alt text](/screenshot/lib-icat.png?raw=true "Library")
+
 The _Library_ tab displays a table consisting of the "target associated receptor sequences" (TARS), determined to be statistically associated with exposure to the target/agent/pathogen. The table displays each sequence, number of positive and negative training samples the sequence is present in/absent from, and how statistically associated the sequence is to the positive training data (*p*-value). The table can be downloaded to the user's computer for further analysis using excel, commandline, etc using the download `Table` button below the table.
 
 **Prediction:**
+
+![Alt text](/screenshot/pred-icat.png?raw=true "Prediction")
 
 The _Prediction_ tab allows the user to add sequencing data from unknown samples (e.g. not included in the previous training data) for classification as "Positive" or "Negative" and determining the accuracy of the diagnostic assay.
 
