@@ -60,5 +60,18 @@ Individual samples’ sequencing data should be in .tsv format.
 
 6) Once all options are selected click `Train Model`
 
+A progress bar will show on the bottom-right corner to update on the satatus of training. After finishing, the _training_ tab will show some exploratory tables and a figure regarding the training data and the model built, which can all be downloaded to the user's machine. In addition, the _library_ and _prediction_ tab will unlock.
 
+**Library:**
+
+The _library_ tab displays a table consisting of the "target associated receptor sequences" (TARS), determined to be statistically associated with exposure to the target/agent/pathogen. The table displays each sequence, number of positive and negative training samples the sequence is present in/absent from, and how statistically associated the sequence is to the positive training data (*p*-value). The table can be downloaded to the user's computer for further analysis using excel, commandline, etc using the download `Table` button below the table.
+
+**Prediction:**
+
+The prediction function allows the user to add sequencing data from unknown samples (e.g. not included in the previous training data) for classification as "Positive" or "Negative" and determining the accuracy of the diagnostic assay.
+
+1)	Use the `Browse` button to add samples for prediction. Multiple samples may be uploaded simultaneously.
+2)	Click `Predict Independent Sample`.
+
+A table will appear after analysis is complete. The table displays sample names along with the prediction "Positive" (red)/ "Negative" (blue), and displays the ‘%TARS’: the percent of individual sequences from the sample that are included in the TARS library. The prediction results can be downloaded as a table.
 
