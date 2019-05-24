@@ -107,8 +107,8 @@ After loading iCAT with `library(iCAT)`
        
 3) Read in Positive and Negative training samples:
 
-       > naive <- readTrn(listPos, FIELD, "naive")
-       > vaccs <- readTrn(listNeg, FIELD, "vacc")
+       > naive <- readTrn(listNeg, FIELD, "naive")
+       > vaccs <- readTrn(listPos, FIELD, "vacc")
        
 4) Build a model using the training data:
       
