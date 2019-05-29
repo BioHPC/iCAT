@@ -128,6 +128,8 @@ After loading iCAT with `library(iCAT)`
        
 5) Predict sample(s) exposure based on model:
 
-       > pred(mod, vaccs, "path/to/unknown", "unknown-name.tsv", FIELD)
+       > pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
+       
+_Note_: If predicting multiple samples, use vectors for paths and labels.
        
        
