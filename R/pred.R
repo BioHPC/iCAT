@@ -1,7 +1,6 @@
 #' Predict the exposure status of an independent sample.
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
-#' @param iccs Dataframe of sequence frequencies in independent sample.
 #' @param indpt Vector of independent samples file paths.
 #' @param names Vector of labels for independent samples.
 #' @param field String containing the column or columns (space-delimited) of interest.
@@ -10,7 +9,7 @@
 #' @examples
 #' comb <- train(...)
 #' classMat(comb)
-pred <- function(comb, iccs, indpt, names, field) {
+pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)
 
@@ -28,14 +27,13 @@ pred <- function(comb, iccs, indpt, names, field) {
     return(h)
   })
 
-print(greplistppost)
   idcounts <- list()
   for (i in 1:nums)
     idcounts[i] <-
-    print(sum(unlist(
+    sum(unlist(
       lapply(lib$names, function(x)
         greplistppost[[i]][[x]])
-    )))
+    ))
 
   idtotals <- lapply(greplistppost, function(x) sum(hash::values(x)))
 
