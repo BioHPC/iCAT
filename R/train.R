@@ -18,15 +18,16 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   numpre <- length(prelist)
   numpost <- length(postlist)
 
+  colnames(negatives)[2] <- "naiveamounts"
+  colnames(positives)[2] <- "vaccamounts"
   #merge vaccinated and unvaccinated samples
   all <- merge(positives, negatives, all.x = T)
   all[is.na(all)] <- 0
 
 
-
   #calculate and eliminate samples that are upregulated in naive
-  totals <-
-    (all$vaccamounts * (numpre / numpost) - all$naiveamounts)
+  totals <- (all$vaccamounts * (numpre / numpost) - all$naiveamounts)
+
   all <- data.table::data.table(cbind(all, totals))
   all <- all[order(totals),]
   all <- subset(all, totals > 0)
@@ -35,7 +36,6 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   vaccabsent <- numpost - all$`vaccamounts`
   #bind those numbers to the rest of the table
   all <- cbind(all, naiveabsent, vaccabsent)
-
 
   #pull out fisher-test relevant values and run test
   fishervalues <- all[, c(2, 3, 6, 5)]
@@ -131,10 +131,10 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   for (i in 1:numpre) {
     #updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
     navcounts[i] <-
-    print(sum(unlist(
+    sum(unlist(
       lapply(finally$names, function(x)
         greplistpre[[i]][[x]])
-    )))
+    ))
   }
 
   navtotals <- sapply(greplistpre, function(x) sum(hash::values(x)))
@@ -145,10 +145,10 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   for (i in 1:numpost) {
     #updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
     vaccounts[i] <-
-    print(sum(unlist(
+    sum(unlist(
       lapply(finally$names, function(x)
         greplistppost[[i]][[x]])
-    )))
+    ))
   }
 
   vactotals <- lapply(greplistppost, function(x) sum(hash::values(x)))
