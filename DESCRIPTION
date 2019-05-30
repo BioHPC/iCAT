@@ -1,11 +1,20 @@
 Package: iCAT
 Title: immune Cell Analysis Tool
-Version: 0.0.2
-Authors@R: 
+Version: 0.1.0
+Authors@R:c( 
     person(given = "Ahmad",
            family = "Rajeh",
            role = c("aut", "cre"),
-           email = "ahmadrjeh@gmail.com")
+           email = "ahmadrjeh@gmail.com"),
+    person("Kyle", "Wolf", role = c("aut"),
+        email = "kyle.james.wolf@gmail.com"),
+    person("Courtney", "schiebout",
+        email = "courtney.schiebout@health.slu.edu"),
+    person("Tae-Hyuk", "Ahn",
+        email = "ted.ahn@slu.edu")
+    person("Richard", "DiPaolo",
+        email = "richard.dipaolo@health.slu.edu")
+    )
 Description: Interactive interface to uploaded labeled TCR-sequencing clonotype lists,
              find significant target-associated TCR sequences, and allow prediction of
              independent samples.
@@ -19,6 +28,7 @@ Imports:
 	DT,
 	hash
 License: LICENSEX
+URL: https://github.com/BioHPC/iCAT, https://biohpc.github.io/iCAT
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 6.1.1.9000
