@@ -1,10 +1,10 @@
-# iCAT: Immune Cells Analysis software Tool
+# iCAT: Immune Cells Analysis software Tool <img src="inst/app/www/cat2.png" align="right" width="125"/>
+
 
 High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. However, the nature of this process requires analysis of massive datasets that requires streamlining. Here we present ICAT, an R-based method for tackling this data and applying statistical analyses to find significant patterns and divergences.
 
 <br/>
 
-![Alt text](/screenshot/icat.png?raw=true "Screeshot")
 
 <br/>
 
