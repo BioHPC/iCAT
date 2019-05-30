@@ -1,276 +1,159 @@
-jscode <-
-  "
-shinyjs.disableTab = function(name) {
+#' Main training function.
+#' @param negatives Dataframe of sequence frequencies in negative samples.
+#' @param positives Datafram of sequence frequencies in positive samples.
+#' @param prelist Vector of negative training samples.
+#' @param postlist Vector of positive training samples.
+#' @param field String containing the column or columns (space-delimited) of interest.
+#' @param pcut P-value threshold for fisher-exact test.
+#' @param minpublic Sequence frequency threshold to be considered.
+#' @param updateProgress Function for updating a progress bar in a Shiny interface.
+#' @return List containing both negtive (n) and positive (v) clonotype percentages.
+#' @export
+#' @examples
+#' train(negaties, positives, prelist, postlist, "aminoAcid", 0.1, 3, updateProgress)
+train <- function(negatives, positives, prelist, postlist, field, pcut, minpublic, updateProgress) {
 
-var tab = $('.nav li a[data-value=' + name + ']');
-tab.bind('click.tab', function(e) {
-e.preventDefault();
-return false;
-});
-tab.addClass('disabled');
+  fs <- strsplit(field, ' ')[[1]]
+
+  numpre <- length(prelist)
+  numpost <- length(postlist)
+
+  colnames(negatives)[2] <- "naiveamounts"
+  colnames(positives)[2] <- "vaccamounts"
+  #merge vaccinated and unvaccinated samples
+  all <- merge(positives, negatives, all.x = T)
+  all[is.na(all)] <- 0
+
+
+  #calculate and eliminate samples that are upregulated in naive
+  totals <- (all$vaccamounts * (numpre / numpost) - all$naiveamounts)
+
+  all <- data.table::data.table(cbind(all, totals))
+  all <- all[order(totals),]
+  all <- subset(all, totals > 0)
+  #calculate number of samples that each amino acid is absent from
+  naiveabsent <- numpre - all$`naiveamounts`
+  vaccabsent <- numpost - all$`vaccamounts`
+  #bind those numbers to the rest of the table
+  all <- cbind(all, naiveabsent, vaccabsent)
+
+  #pull out fisher-test relevant values and run test
+  fishervalues <- all[, c(2, 3, 6, 5)]
+  #updateProgress(detail = "Calculating p-value")
+  # slow step...
+  # instead of repeating fisher tests only do the unique ones then merge back
+  uniquefishervalues <- unique(fishervalues[, 1:4])
+  uniquefishervalues$pvals <-
+    apply(uniquefishervalues, 1, function(x)
+      fisher.test(matrix(x, nrow = 2), alternative = "greater")$p.value)
+  # AR: **kyle sumcv idea**
+  pvalfishies <-
+    merge(
+      uniquefishervalues,
+      fishervalues,
+      by = c("vaccamounts", "naiveamounts", "vaccabsent",   "naiveabsent"),
+      sort = FALSE
+    )
+
+
+  uniquefishervalues$sumcv <-
+    lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$vaccamounts[pvalfishies$pvals <= x]))
+  uniquefishervalues$covvac <-
+    as.numeric(uniquefishervalues$sumcv) / numpost
+  uniquefishervalues$sumcn <-
+    lapply(uniquefishervalues$pvals, function (x) sum(pvalfishies$naiveamounts[pvalfishies$pvals <= x]))
+  uniquefishervalues$covnav <- as.numeric(uniquefishervalues$sumcn) / numpre
+
+
+
+  #bind p values to table
+  all <- cbind(all, pvalfishies)
+
+  #all <- all[order(pvalfishies)]
+  #grep for only viable sequences
+  all <- all[c(grep("^[A-Z*]", all$names)),]
+
+  #all <- transform(all, Cv = ave(vaccamounts, FUN = cumsum))
+
+  #all <- transform(all, Cn = ave(naiveamounts, FUN = cumsum))
+
+  uniquefishervalues$ratio <- ifelse(uniquefishervalues$covnav < 1,
+                                     uniquefishervalues$covvac,
+                                     uniquefishervalues$covvac/uniquefishervalues$covnav)
+
+
+  testvalue <- subset(uniquefishervalues, uniquefishervalues$pvals < as.double(pcut))
+
+
+  pval <- testvalue$pvals[which.max(testvalue$ratio)]
+
+  #get final list
+  #updateProgress(detail = "Separating sequence library")
+  finally <- all[all$pvals <= pval,]
+  finally <- finally[finally$vaccamounts >= as.numeric(minpublic),]
+
+  lib <<- finally
+
+
+  greplistpre <- lapply(prelist, function(x) {
+    dat <- data.table::fread(x, select = c(fs))
+    x <- rep("", length(dat[[1]]))
+    for (i in 1:length(fs))
+      x <- paste(x, dat[[i]])
+    x <- substring(x, 2)
+    dat <-
+      data.table::data.table(x)
+    dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
+    h <- hash::hash(dat$x, dat$freq)
+    return(h)
+  })
+
+
+  greplistppost <- lapply(postlist, function(x) {
+    dat <- data.table::fread(x, select = fs)
+    x <- rep("", length(dat[[1]]))
+    for (i in 1:length(fs))
+      x <-paste(x, dat[[i]])
+    x <- substring(x, 2)
+    dat <-
+      data.table::data.table(x)
+    dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
+    h <- hash::hash(dat$x, dat$freq) # build hash of counts
+    return(h)
+  })
+
+
+
+  #find percentage of significant clonotypes
+  navcounts <- list()
+  for (i in 1:numpre) {
+    #updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
+    navcounts[i] <-
+    sum(unlist(
+      lapply(finally$names, function(x)
+        greplistpre[[i]][[x]])
+    ))
+  }
+
+  navtotals <- sapply(greplistpre, function(x) sum(hash::values(x)))
+
+  navpercs <- (as.numeric(navcounts) / navtotals) * 100
+
+  vaccounts <- list()
+  for (i in 1:numpost) {
+    #updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
+    vaccounts[i] <-
+    sum(unlist(
+      lapply(finally$names, function(x)
+        greplistppost[[i]][[x]])
+    ))
+  }
+
+  vactotals <- lapply(greplistppost, function(x) sum(hash::values(x)))
+
+  vacpercs <- (as.numeric(vaccounts) / as.numeric(vactotals)) * 100
+
+  return(list(n=navpercs, v=vacpercs, l=finally))
 }
-
-shinyjs.enableTab = function(name) {
-var tab = $('.nav li a[data-value=' + name + ']');
-tab.unbind('click.tab');
-tab.removeClass('disabled');
-}
-"
-
-css <-
-  "
-.nav li a.disabled {
-background-color: #ccc !important;
-color: #aaa !important;
-cursor: not-allowed !important;
-border-color: #aaa !important;
-}
-"
-ui <- shiny::fluidPage(shinyjs::useShinyjs(),
-                shinyjs::extendShinyjs(text = jscode, functions =c("disableTab", "enableTab")),
-                shinyjs::inlineCSS(css),
-
-                shiny::img(src='cat2.png', height=120, width=160, hspace = 5, vspace = 5),
-
-                shiny::tabsetPanel(id = 'navbar',
-                  shiny::tabPanel(title = "Training",
-                           id = "trnTab",
-                           fluid = T,
-                           shiny::sidebarLayout(
-                             shiny::sidebarPanel(
-                               shiny::fileInput(
-                                 "pre",
-                                 "Negative Training",
-                                 multiple = TRUE,
-                                 accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
-                               ),
-                               shiny::fileInput(
-                                 "post",
-                                 "Positive Training",
-                                 multiple = TRUE,
-                                 accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
-                               ),
-
-                               shiny::radioButtons(
-                                 "field",
-                                 "Analyze Clonotypes By (column names in parantheses):",
-                                 choices = list(
-                                   "CDR3 Amino Acid (aminoAcid)" = "aminoAcid",
-                                   "TCRV-CDR3-TCRJ (vGeneName aminoAcid jGeneName)" = "vGeneName aminoAcid jGeneName",
-                                   "Nucleic Acid (nucleotide)" = "nucleotide",
-                                   "Other" = "other"
-                                 )
-                               ),
-                               shinyjs::hidden(shiny::textInput("otherbt", "Please provide data columns to analyze by (space-separated)",
-                                                value = "vGeneName aminoAcid jGeneName")),
-                               shiny::textInput("pcut", "Max p-value", value = 0.1),
-                               shiny::textInput("thresh", "Min Threshold of Public Sequences", value = 1),
-                               shiny::tags$hr(),
-
-                               shiny::actionButton("run", "Train Model"),
-                               shiny::br(),
-                               shiny::br(),
-                               shiny::div(shinyjs::hidden(shiny::downloadButton('dnScreen', label="Save Parameters", style='padding-left:125px; padding-right:125px')))
-                             ),
-
-                             shiny::mainPanel(
-                               shinyjs::hidden(shiny::h4(id = 'h4', "Training Data Summary:")),
-                               shiny::tableOutput('trnTable'),
-                               shinyjs::hidden(shiny::downloadButton('dnSummary', label="Table")),
-                               shinyjs::hidden(shiny::h4(id = 'h1', "Pre/Post Distributions:")),
-                               shiny::plotOutput(outputId = "plot"),
-                               shiny::div(style="display:inline-block", shinyjs::hidden(shiny::downloadButton('dnPlot', label="Plot PNG"))),
-                               shiny::div(style="display:inline-block", shinyjs::hidden(shiny::downloadButton('dnPlotPDF', label="Plot PDF"))),
-                               shiny::br(),
-                               shiny::br(),
-                               shinyjs::hidden(shiny::h4(id = 'h2', "Classification Matrix: ")),
-                               shiny::tableOutput('table'),
-                               shinyjs::hidden(shiny::downloadButton('dnClass', label="Table"))
-                             )
-
-                           )
-                           ),
-
-                  shiny::tabPanel(
-                    title = "Library",
-                    value = "libTab",
-                    DT::dataTableOutput("library"),
-                    shiny::br(),
-                    shinyjs::hidden(shiny::downloadButton('dnLib', label="Table"))
-                  ),
-
-                  shiny::tabPanel(
-                    title = "Prediction",
-                    value = "predTab",
-                    fluid = T,
-                    shiny::sidebarLayout(
-                      shiny::sidebarPanel(
-                        shiny::fileInput(
-                          "indpt",
-                          "Independent Sample(s)",
-                          multiple = T,
-                          accept = c("text/tsv", "text/tab-separated-values", ".tsv")
-                        ),
-                        shiny::tags$hr(),
-                        shiny::actionButton("pred", "Predict Independent Sample(s)")
-                      ),
-                      shiny::mainPanel(shinyjs::hidden(shiny::h4(
-                        id = "h3", "Prediction Results:"
-                      )),
-                      DT::dataTableOutput('result'),
-                      shiny::br(),
-                      shinyjs::hidden(shiny::downloadButton('dnPred', label="Table"))
-                      )
-                    )
-                  )
-                )
-)
-
-server <- function(input, output, session) {
-  shinyjs::js$disableTab("predTab")
-  shinyjs::js$disableTab("libTab")
-
-  options(shiny.maxRequestSize=10000*1024^2)
-
-  observe({
-    shinyjs::toggle("otherbt", anim = T, condition = input$field == "other")
-    if (input$field == "other") {
-      field <<- input$otherbt
-    } else {
-      field <<- input$field
-    }
-  })
-
-  both <- shiny::eventReactive(input$run, {
-    print("Field:")
-    print(field)
-    shiny::validate(shiny::need(input$pre !="", "Please select negative samples"),
-                    shiny::need(input$post != "", "Please select postive samples" ))
-    progress <- shiny::Progress$new(style = 'notification')
-    progress$set(message = "Training Procedure", value = 0)
-    on.exit(progress$close())
-
-    updateProgress <- function(value = NULL, detail = NULL) {
-      if (is.null(value)) {
-        value <- progress$getValue()
-        value <-  value + (progress$getMax() - value) / 5
-      }
-      progress$set(value = value, detail = detail)
-    }
-
-    updateProgress(detail = "Reading files")
-    naive <- readTrn(input$pre$datapath, field, "naive")
-    vaccs <- readTrn(input$post$datapath, field, "vacc")
-    anl <- train(naive, vaccs, input$pre$datapath, input$post$datapath, field, input$pcut, input$thresh, updateProgress)
-    shinyjs::show("h1")
-    shinyjs::show("h2")
-    shinyjs::show("h4")
-    shinyjs::show("dnPlot")
-    shinyjs::show("dnPlotPDF")
-    shinyjs::show("dnLib")
-    shinyjs::show("dnScreen")
-    shinyjs::show("libTab")
-    shinyjs::show("dnSummary")
-    shinyjs::show("dnClass")
-
-    shinyjs::js$enableTab("predTab")
-    shinyjs::js$enableTab("libTab")
-    return(anl)
-  })
-
-  preds <- shiny::eventReactive(input$pred, {
-    show("h3")
-    show("dnPred")
-    return(pred(both(), readTrn(input$indpt$datapath, field, "vaccs"), input$indpt$datapath, input$indpt$name, field))
-  })
-
-  output$plot <- shiny::renderPlot({
-    plotHist(both())
-  })
-
-  output$trnTable <- shiny::renderTable({
-    both()
-    trnStats(input$pre$datapath, input$post$datapath, field)
-  }, rownames = T)
-  output$table <- renderTable({
-    classMat(both())
-  },
-  include.rownames = T)
-  output$result  <- DT::renderDataTable({
-      DT::formatStyle(
-        DT::datatable(preds()),
-        'Prediction',
-        target = 'row',
-        color = DT::styleEqual(c("Negative", "Positive"), c('blue', 'red'))
-      )
-  })
-
-  output$dnPred <- shiny::downloadHandler(
-    filename = "predictions.csv",
-    content = function(file) {
-      write.csv(preds(), file, row.names=F)
-    }
-  )
-  output$dnClass <- shiny::downloadHandler(
-    filename = "classification_matrix.csv",
-    content = function(file) {
-      write.csv(classMat(both()), file, row.names=T)
-    }
-  )
-  output$dnSummary <- shiny::downloadHandler(
-    filename = "training_summary.csv",
-    content = function(file) {
-      both()
-      write.csv(trnStats(input$pre$datapath, input$post$datapath, field), file, row.names=T)
-    }
-  )
-
-  output$dnPlot <- shiny::downloadHandler(
-    filename = "clonotypes_distribution.png",
-    content = function(file) {
-      both()
-      png(file)
-      print(plotHist(both()))
-      dev.off()
-    }
-  )
-  output$dnScreen <- shiny::downloadHandler(
-    filename = paste("iCAT_report_", Sys.time(), ".txt", sep = ""),
-    content = function(file) {
-      cat(paste("iCAT Run on ", Sys.time()), file=file, sep="\n")
-      cat("\nNegative Files:", file=file, append=T, sep="\n")
-      cat(input$pre$name, file=file, append=T, sep="\n")
-      cat("\nPositive Files:", file=file, append=T, sep="\n")
-      cat(input$post$name, file=file, append=T, sep="\n")
-      cat("\nField:", file=file, append=T, sep="\n")
-      cat(field, file=file, append=T, sep="\n")
-      cat("\nMax PValue:", file=file, append=T, sep="\n")
-      cat(input$pcut, file=file, append=T, sep="\n")
-      cat("\nMin Threshold of Public Sequences:", file=file, append=T, sep="\n")
-      cat(input$thresh, file=file, append=T, sep="\n")
-
-    }
-  )
-  output$dnPlotPDF <- shiny::downloadHandler(
-    filename = "clonotypes_distribution.pdf",
-    content = function(file) {
-      pdf(file)
-      print(plotHist(both()))
-      dev.off()
-    }
-  )
-  output$dnLib <- shiny::downloadHandler(
-    filename = "clonotypes_library.csv",
-    content = function(file) {
-      write.csv(getLib(both()), file, row.names=F)
-    }
-  )
-
-  output$library <- DT::renderDataTable({
-    DT::datatable(getLib(both()))
-  },
-
-  options = list(scrollX = TRUE))
-}
-
-shinyApp(ui, server)
