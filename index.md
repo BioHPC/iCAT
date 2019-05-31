@@ -22,7 +22,7 @@ To install devtools, use the command:
         
 *Note*: iCAT also uses shiny, shinyjs, data.table, ggplot2, DT, hash, and magrittr. However, those packages will be installed if using `install_github` from below.
 
-## Installing iCAT
+### Installing iCAT
 
 Using an R interface, type:
 ```
