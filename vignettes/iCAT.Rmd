@@ -101,7 +101,6 @@ After loading iCAT with `library(iCAT)`
 > plotHist(mod)
 ```          
  - _optional_ Produce the library of TCR sequences associated with positve samples:
-
 ```     
 > getLib(mod) 
 ```
