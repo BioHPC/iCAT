@@ -14,6 +14,3 @@ processFiles(x, field)
 \description{
 Internal function for transforming input files.
 }
-\examples{
-lapply(list, processFiles)
-}

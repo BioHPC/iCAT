@@ -10,12 +10,8 @@ classMat(comb)
 \item{comb}{List containing both negtive (n) and positive (v) clonotype percentages.}
 }
 \value{
-Matrix with % correct predictions from training data.
+Matrix with \% correct predictions from training data.
 }
 \description{
 Classification matrix estimating accuracy of model.
-}
-\examples{
-comb <- train(...)
-classMat(comb)
 }

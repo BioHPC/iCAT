@@ -15,6 +15,3 @@ List of *.tsv files in the directory.
 \description{
 List TSV files in a directory.
 }
-\examples{
-tsvDir("./")
-}

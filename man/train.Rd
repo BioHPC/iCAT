@@ -30,6 +30,3 @@ List containing both negtive (n) and positive (v) clonotype percentages.
 \description{
 Main training function.
 }
-\examples{
-train(negaties, positives, prelist, postlist, "aminoAcid", 0.1, 3, updateProgress)
-}

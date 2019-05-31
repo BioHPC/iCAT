@@ -19,6 +19,3 @@ Dataframe containing unique sequences and their frequencies in the samples.
 \description{
 Read input training data.
 }
-\examples{
-readTrn(files, "aminoAcid", "negative")
-}

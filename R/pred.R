@@ -4,7 +4,7 @@
 #' @param indpt Vector of independent samples file paths.
 #' @param names Vector of labels for independent samples.
 #' @param field String containing the column or columns (space-delimited) of interest.
-#' @return Matrix with % correct predictions from training data.
+#' @return Matrix with \% correct predictions from training data.
 #' @export
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]

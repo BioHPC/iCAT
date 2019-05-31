@@ -1,7 +1,7 @@
 #' Classification matrix estimating accuracy of model.
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
-#' @return Matrix with % correct predictions from training data.
+#' @return Matrix with \% correct predictions from training data.
 #' @export
 classMat <- function(comb) {
   navpercs <- comb$n

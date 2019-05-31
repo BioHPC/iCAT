@@ -16,12 +16,8 @@ pred(comb, indpt, names, field)
 \item{field}{String containing the column or columns (space-delimited) of interest.}
 }
 \value{
-Matrix with % correct predictions from training data.
+Matrix with \% correct predictions from training data.
 }
 \description{
 Predict the exposure status of an independent sample.
-}
-\examples{
-comb <- train(...)
-classMat(comb)
 }

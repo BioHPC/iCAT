@@ -12,7 +12,3 @@ Dataframe containing the significant target-associated receptor sequences.
 \description{
 Dataframe of TARSs library.
 }
-\examples{
-comb <- train(...)
-lib <- getLib()
-}

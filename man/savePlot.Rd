@@ -12,7 +12,3 @@ savePlot(file, plotIn)
 \description{
 Save plot to pdf.
 }
-\examples{
-comb <- train(...)
-plotHist(comb)
-}

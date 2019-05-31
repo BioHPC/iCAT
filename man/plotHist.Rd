@@ -12,7 +12,3 @@ plotHist(comb)
 \description{
 Plot histogram of clonotype frequencies in negative and positive samples.
 }
-\examples{
-comb <- train(...)
-plotHist(comb)
-}

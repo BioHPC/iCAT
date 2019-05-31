@@ -19,6 +19,3 @@ Dataframe containing number of samples, colonotypes, and unique seqs in training
 \description{
 Statistics about training data.
 }
-\examples{
-trnStats(listPre, listPost, "aminoAcid")
-}
