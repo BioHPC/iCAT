@@ -4,12 +4,10 @@
 \alias{pred}
 \title{Predict the exposure status of an independent sample.}
 \usage{
-pred(comb, iccs, indpt, names, field)
+pred(comb, indpt, names, field)
 }
 \arguments{
 \item{comb}{List containing both negtive (n) and positive (v) clonotype percentages.}
-
-\item{iccs}{Dataframe of sequence frequencies in independent sample.}
 
 \item{indpt}{Vector of independent samples file paths.}
 

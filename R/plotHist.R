@@ -2,7 +2,7 @@
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
 #' @export
-#' @example
+#' @examples
 #' comb <- train(...)
 #' plotHist(comb)
 plotHist <- function(comb) {

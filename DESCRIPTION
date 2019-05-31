@@ -8,11 +8,11 @@ Authors@R:c(
            email = "ahmadrjeh@gmail.com"),
     person("Kyle", "Wolf", role = c("aut"),
         email = "kyle.james.wolf@gmail.com"),
-    person("Courtney", "schiebout",
+    person("Courtney", "schiebout",role = c("aut"),
         email = "courtney.schiebout@health.slu.edu"),
-    person("Tae-Hyuk", "Ahn",
-        email = "ted.ahn@slu.edu")
-    person("Richard", "DiPaolo",
+    person("Tae-Hyuk", "Ahn",role = c("aut"),
+        email = "ted.ahn@slu.edu"),
+    person("Richard", "DiPaolo",role = c("aut"),
         email = "richard.dipaolo@health.slu.edu")
     )
 Description: Interactive interface to uploaded labeled TCR-sequencing clonotype lists,

@@ -1,7 +1,6 @@
 # iCAT: Immune Cells Analysis software Tool <img src="inst/app/www/cat2.png" align="right" width="125"/>
 
-
-High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. However, the nature of this process requires analysis of massive datasets that requires streamlining. Here we present ICAT, an R-based method for tackling this data and applying statistical analyses to find significant patterns and divergences.
+High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. iCAT is a user-friendly, graphical-interface software that takes exposed and non-exposed samples of T-cell receptor (TCR) clonotypes as input and identifies pathogen-specific TCR sequences. Using these sequences, iCAT can also classify independent samples of TCR clonotypes. iCAT was able to identify vaccine-accosiated TCR seqeunces with up to 95% accuracy in mice. 
 
 <br/>
 
@@ -18,9 +17,9 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
     - devtools
 
 To install devtools, use the command:
-
-        > install.packages("devtools") 
-        
+```
+> install.packages("devtools") 
+```        
 *Note*: iCAT also uses shiny, shinyjs, data.table, ggplot2, DT, hash, and magrittr. However, those packages will be installed if using `install_github` from below.
 
 ## Installing iCAT
