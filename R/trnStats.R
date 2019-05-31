@@ -5,8 +5,6 @@
 #' @param field String containing the column or columns (space-delimited) of interest.
 #' @return Dataframe containing number of samples, colonotypes, and unique seqs in training data.
 #' @export
-#' @examples
-#' trnStats(listPre, listPost, "aminoAcid")
 trnStats <- function(listPre, listPost, field) {
   fs <- strsplit(field, ' ')[[1]]
   

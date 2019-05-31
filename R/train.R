@@ -9,8 +9,6 @@
 #' @param updateProgress Function for updating a progress bar in a Shiny interface.
 #' @return List containing both negtive (n) and positive (v) clonotype percentages.
 #' @export
-#' @examples
-#' train(negaties, positives, prelist, postlist, "aminoAcid", 0.1, 3, updateProgress)
 train <- function(negatives, positives, prelist, postlist, field, pcut, minpublic, updateProgress) {
 
   fs <- strsplit(field, ' ')[[1]]

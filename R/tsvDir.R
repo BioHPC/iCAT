@@ -3,8 +3,6 @@
 #' @param dir String of directory.
 #' @return List of *.tsv files in the directory.
 #' @export
-#' @examples
-#' tsvDir("./")
 tsvDir <- function (dir) {
   list <-
     list.files(

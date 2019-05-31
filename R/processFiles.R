@@ -3,8 +3,6 @@
 #' @param x Input file.
 #' @param field String containing the column or columns (space-delimited) of interest.
 #' @export
-#' @examples
-#' lapply(list, processFiles)
 processFiles <- function(x, field) {
   fs <- strsplit(field, ' ')[[1]]
   # get sequenceStatus column to use as filter, then remove it

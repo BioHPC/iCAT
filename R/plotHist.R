@@ -2,9 +2,6 @@
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
 #' @export
-#' @examples
-#' comb <- train(...)
-#' plotHist(comb)
 plotHist <- function(comb) {
   comb_ <- list(n=comb$n, v=comb$v)
   navvac_hist <-

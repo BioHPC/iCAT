@@ -2,9 +2,6 @@
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
 #' @export
-#' @examples
-#' comb <- train(...)
-#' plotHist(comb)
 savePlot <- function(file, plotIn) {
   ggplot2::ggsave(
     device = "pdf",

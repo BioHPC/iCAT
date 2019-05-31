@@ -2,9 +2,6 @@
 #'
 #' @return Dataframe containing the significant target-associated receptor sequences.
 #' @export
-#' @examples
-#' comb <- train(...)
-#' lib <- getLib()
 getLib <- function(comb) {
   lib <- comb$l
   l <- lib[, unique(colnames(lib)), with=FALSE]

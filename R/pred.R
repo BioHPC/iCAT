@@ -6,9 +6,6 @@
 #' @param field String containing the column or columns (space-delimited) of interest.
 #' @return Matrix with % correct predictions from training data.
 #' @export
-#' @examples
-#' comb <- train(...)
-#' classMat(comb)
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)

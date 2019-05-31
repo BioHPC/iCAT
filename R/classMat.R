@@ -3,9 +3,6 @@
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
 #' @return Matrix with % correct predictions from training data.
 #' @export
-#' @examples
-#' comb <- train(...)
-#' classMat(comb)
 classMat <- function(comb) {
   navpercs <- comb$n
   vacpercs <- comb$v

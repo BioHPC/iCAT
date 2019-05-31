@@ -5,8 +5,6 @@
 #' @param posOrNeg String indicating whether the data is negative or positive.
 #' @return Dataframe containing unique sequences and their frequencies in the samples.
 #' @export
-#' @examples
-#' readTrn(files, "aminoAcid", "negative")
 readTrn <- function(list, field, posOrNeg) {
   if (length(list) == 0) {
     return(NULL)
