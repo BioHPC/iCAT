@@ -1,6 +1,7 @@
 #' Save plot to pdf.
 #'
-#' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
+#' @param file name to give plot file
+#' @param plotIn plot object
 #' @export
 savePlot <- function(file, plotIn) {
   ggplot2::ggsave(

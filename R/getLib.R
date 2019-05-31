@@ -1,5 +1,6 @@
 #' Dataframe of TARSs library.
 #'
+#' @param comb composed list returned from train() function
 #' @return Dataframe containing the significant target-associated receptor sequences.
 #' @export
 getLib <- function(comb) {
