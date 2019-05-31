@@ -1,3 +1,12 @@
+---
+author: "Ahmad Rajeh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{iCAT}
+  %\usepackage[UTF-8]{inputenc}
+---
 
 iCAT aims to (1) identify TCR sequences that are significantly associated with target samples and (2) to binary-classify unkown samples. Users can either perform analysis using the Shiny graphical user interface, or directly on an R interpreter.
 

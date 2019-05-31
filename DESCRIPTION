@@ -27,8 +27,11 @@ Imports:
 	ggplot2,
 	DT,
 	hash
-License: LICENSEX
+Suggests:
+    knitr
+License: GPL-2
 URL: https://github.com/BioHPC/iCAT, https://biohpc.github.io/iCAT
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 6.1.1.9000
+VignetteBuilder: knitr

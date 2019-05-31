@@ -7,7 +7,9 @@
 savePlot(file, plotIn)
 }
 \arguments{
-\item{comb}{List containing both negtive (n) and positive (v) clonotype percentages.}
+\item{file}{name to give plot file}
+
+\item{plotIn}{plot object}
 }
 \description{
 Save plot to pdf.

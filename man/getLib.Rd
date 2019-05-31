@@ -6,6 +6,9 @@
 \usage{
 getLib(comb)
 }
+\arguments{
+\item{comb}{composed list returned from train() function}
+}
 \value{
 Dataframe containing the significant target-associated receptor sequences.
 }
