@@ -20,23 +20,24 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 
 To install devtools, use the command:
 ```
-> install.packages("devtools") 
+install.packages("devtools") 
 ```        
 *Note*: iCAT also uses shiny, shinyjs, data.table, ggplot2, DT, hash, and magrittr. However, those packages will be installed if using `install_github` from below.
 
 ## Installing iCAT
 
 Using an R interface, type:
-
-        > devtools::install_github("BioHPC/iCAT") 
-
+```  
+devtools::install_github("BioHPC/iCAT") 
+```  
 
 ## Graphical Interface Workflow
 
 In R:
-
-        > library(iCAT)
-        > iCATinteractive()
+```  
+library(iCAT)
+iCATinteractive()
+```  
 
 This will launch a graphical user interface (GUI) for iCAT. The GUI has three tabs, separating major functionalities: training, library, and prediction.
 
@@ -87,21 +88,21 @@ After loading iCAT with `library(iCAT)`
 
 1) Define the parameters you would like to use for building the model:
 ```
-> FIELD <- "vGeneName aminoAcid jGeneName"
-> P_CUTOFF <- 0.1
-> MIN_PUBLIC <- 2
+FIELD <- "vGeneName aminoAcid jGeneName"
+P_CUTOFF <- 0.1
+MIN_PUBLIC <- 2
 ```     
 2) Make lists of .tsv Positive and Negative training samples:
 
 ```     
-> listPos <- tsvDir("path/to/positve/samples/")
-> listNeg <- tsvDir("path/to/negative/samples/")
+listPos <- tsvDir("path/to/positve/samples/")
+listNeg <- tsvDir("path/to/negative/samples/")
        
 ```     
  - _optional_ Collect summary statistics about training samples:
 
 ```     
-> trnStats(listPos, listNeg, FIELD)
+trnStats(listPos, listNeg, FIELD)
 #>         # Samples # Clonotypes # Unique Sequences
 #>Negative         9       101942             281336
 #>Positive         9        34158              89150
@@ -109,32 +110,32 @@ After loading iCAT with `library(iCAT)`
 3) Read in Positive and Negative training samples:
 
 ```     
-> naive <- readTrn(listNeg, FIELD, "naive")
-> vaccs <- readTrn(listPos, FIELD, "vacc")       
+naive <- readTrn(listNeg, FIELD, "naive")
+vaccs <- readTrn(listPos, FIELD, "vacc")       
 ```     
 4) Build a model using the training data:
 ```      
-> mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
 ```     
        
  - _optional_ Produce a table estimating the classification accuracy of the model: 
 
 ```     
-> classMat(mod)
+classMat(mod)
 ```     
  - _optional_ Produce a figure showing % of TCR associated with positve samples in positive and negative samples:
     
 ```     
-> plotHist(mod)
+plotHist(mod)
 ```          
  - _optional_ Produce the library of TCR sequences associated with positve samples:
 
 ```     
-> getLib(mod) 
+getLib(mod) 
 ```     
 5) Predict sample(s) exposure based on model:
 ```
-> pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
+pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
 ```     
 _Note_: If predicting multiple samples, use vectors for paths and labels.
        
