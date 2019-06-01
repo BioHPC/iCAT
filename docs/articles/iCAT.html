@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="">
@@ -76,9 +76,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1></h1>
-                        <h4 class="author">Ahmad Rajeh</h4>
             
-            <h4 class="date">2019-05-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BioHPC/iCAT/blob/master/vignettes/iCAT.Rmd"><code>vignettes/iCAT.Rmd</code></a></small>
       <div class="hidden name"><code>iCAT.Rmd</code></div>
@@ -92,8 +90,8 @@
 <h2 class="hasAnchor">
 <a href="#graphical-user-interface-workflow" class="anchor"></a>Graphical User Interface Workflow</h2>
 <p>In R:</p>
-<pre><code>    &gt; library(iCAT)
-    &gt; iCATinteractive()</code></pre>
+<pre><code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(iCAT)
+iCATinteractive()</a></code></pre>
 <p>This will launch a graphical user interface (GUI) for iCAT. The GUI has three tabs, separating major functionalities: training, library, and prediction.</p>
 <p><strong>Training:</strong></p>
 <p><br><img src="https://github.com/BioHPC/iCAT/blob/master/man/figures/icat.png?raw=true" title="Training"><br></p>
@@ -139,48 +137,48 @@
 <ol style="list-style-type: decimal">
 <li>
 <p>Define the parameters you would like to use for building the model:</p>
-<pre><code>&gt; FIELD &lt;- "vGeneName aminoAcid jGeneName"
-&gt; P_CUTOFF &lt;- 0.1
-&gt; MIN_PUBLIC &lt;- 2</code></pre>
+<pre><code>FIELD &lt;- "vGeneName aminoAcid jGeneName"
+P_CUTOFF &lt;- 0.1
+MIN_PUBLIC &lt;- 2</code></pre>
 </li>
 <li>
 <p>Make lists of .tsv Positive and Negative training samples:</p>
-<pre><code>&gt; listPos &lt;- tsvDir("path/to/positve/samples/")
-&gt; listNeg &lt;- tsvDir("path/to/negative/samples/")</code></pre>
+<pre><code>listPos &lt;- tsvDir("path/to/positve/samples/")
+listNeg &lt;- tsvDir("path/to/negative/samples/")</code></pre>
 </li>
 </ol>
 <ul>
 <li>
 <p><em>optional</em> Collect summary statistics about training samples:</p>
-<pre><code>&gt; trnStats(listPos, listNeg, FIELD)
+<pre><code><a href="../reference/trnStats.html">trnStats(listPos, listNeg, FIELD)
 #&gt;         # Samples # Clonotypes # Unique Sequences
 #&gt;Negative         9       101942             281336
-#&gt;Positive         9        34158              89150</code></pre>
+#&gt;Positive         9        34158              89150</a></code></pre>
 </li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
 <li>
 <p>Read in Positive and Negative training samples:</p>
-<pre><code>&gt; naive &lt;- readTrn(listNeg, FIELD, "naive")
-&gt; vaccs &lt;- readTrn(listPos, FIELD, "vacc")       </code></pre>
+<pre><code>naive &lt;- readTrn(listNeg, FIELD, "naive")
+vaccs &lt;- readTrn(listPos, FIELD, "vacc")       </code></pre>
 </li>
 <li>
 <p>Build a model using the training data:</p>
-<pre><code>&gt; mod &lt;- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)</code></pre>
+<pre><code>mod &lt;- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)</code></pre>
 </li>
 </ol>
 <ul>
 <li>
 <p><em>optional</em> Produce a table estimating the classification accuracy of the model:</p>
-<pre><code>&gt; classMat(mod)</code></pre>
+<pre><code><a href="../reference/classMat.html">classMat(mod)</a></code></pre>
 </li>
 <li>
 <p><em>optional</em> Produce a figure showing % of TCR associated with positve samples in positive and negative samples:</p>
-<pre><code>&gt; plotHist(mod)</code></pre>
+<pre><code><a href="../reference/plotHist.html">plotHist(mod)</a></code></pre>
 </li>
 <li>
 <p><em>optional</em> Produce the library of TCR sequences associated with positve samples:</p>
-<pre><code>&gt; getLib(mod) </code></pre>
+<pre><code><a href="../reference/getLib.html">getLib(mod) </a></code></pre>
 </li>
 </ul>
 </div>
