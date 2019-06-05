@@ -177,8 +177,8 @@ server <- function(input, output, session) {
   })
 
   preds <- shiny::eventReactive(input$pred, {
-    show("h3")
-    show("dnPred")
+    shinyjs::show("h3")
+    shinyjs::show("dnPred")
     return(pred(both(), input$indpt$datapath, input$indpt$name, field))
   })
 
