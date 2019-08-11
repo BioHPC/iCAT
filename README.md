@@ -6,6 +6,7 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 
 <br/>
 
+### iCAT GitHub Page: https://biohpc.github.io/iCAT
 
 ### Pre-requisites:
 
