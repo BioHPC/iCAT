@@ -4,8 +4,6 @@
 
 High throughput sequencing of immune cell receptor sequences presents a unique opportunity to inform our understanding of immunological response to infection and how we can detect it. iCAT is a user-friendly, graphical-interface software that takes exposed and non-exposed samples of T-cell receptor (TCR) clonotypes as input and identifies pathogen-specific TCR sequences. Using these sequences, iCAT can also classify independent samples of TCR clonotypes. iCAT was able to identify vaccine-accosiated TCR seqeunces with up to 95% accuracy in mice. 
 
-<br/>
-
 ### iCAT GitHub Page: https://biohpc.github.io/iCAT
 
 ### Pre-requisites:
