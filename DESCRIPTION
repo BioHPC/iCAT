@@ -1,20 +1,9 @@
 Package: iCAT
 Title: immune Cell Analysis Tool
 Version: 0.1.0
-Authors@R:c( 
-    person(given = "Ahmad",
-           family = "Rajeh",
-           role = c("aut", "cre"),
-           email = "ahmadrjeh@gmail.com"),
-    person("Kyle", "Wolf", role = c("aut"),
-        email = "kyle.james.wolf@gmail.com"),
-    person("Courtney", "schiebout",role = c("aut"),
-        email = "courtney.schiebout@health.slu.edu"),
-    person("Tae-Hyuk", "Ahn",role = c("aut"),
-        email = "ted.ahn@slu.edu"),
-    person("Richard", "DiPaolo",role = c("aut"),
-        email = "richard.dipaolo@health.slu.edu")
-    )
+Author: Ahmad Rajeh, Kyle Wolf, Courtney Schiebout, Richard DiPaolo, Tae-Hyuk Ahn
+Maintainer: Ahmad Rajeh <ahmadrjeh@gmail.com>, Tae-Hyuk Ahn <ted.ahn@slu.edu>
+
 Description: Interactive interface to uploaded labeled TCR-sequencing clonotype lists,
              find significant target-associated TCR sequences, and allow prediction of
              independent samples.
