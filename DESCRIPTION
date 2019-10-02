@@ -28,10 +28,11 @@ Imports:
 	DT,
 	hash
 Suggests:
-    knitr
+	knitr,
+	devtools
 License: file LICENSE
 URL: https://github.com/BioHPC/iCAT, https://biohpc.github.io/iCAT
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 6.1.1.9000
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
