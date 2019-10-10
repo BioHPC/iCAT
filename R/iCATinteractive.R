@@ -1,7 +1,8 @@
 
 
 #' Launch interactive interface
-#'
+#' 
+#' @return shiny app
 #' @examples
 #' if(interactive()) {iCATinteractive()}
 #' @export

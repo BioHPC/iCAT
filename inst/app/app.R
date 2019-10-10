@@ -35,7 +35,7 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                 shiny::tabsetPanel(id = 'navbar',
                   shiny::tabPanel(title = "Training",
                            id = "trnTab",
-                           fluid = T,
+                           fluid = TRUE,
                            shiny::sidebarLayout(
                              shiny::sidebarPanel(
                                shiny::fileInput(
@@ -102,13 +102,13 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                   shiny::tabPanel(
                     title = "Prediction",
                     value = "predTab",
-                    fluid = T,
+                    fluid = TRUE,
                     shiny::sidebarLayout(
                       shiny::sidebarPanel(
                         shiny::fileInput(
                           "indpt",
                           "Independent Sample(s)",
-                          multiple = T,
+                          multiple = TRUE,
                           accept = c("text/tsv", "text/tab-separated-values", ".tsv")
                         ),
                         shiny::tags$hr(),
@@ -133,7 +133,7 @@ server <- function(input, output, session) {
   options(shiny.maxRequestSize=10000*1024^2)
 
   observe({
-    shinyjs::toggle("otherbt", anim = T, condition = input$field == "other")
+    shinyjs::toggle("otherbt", anim = TRUE, condition = input$field == "other")
     if (input$field == "other") {
       field <<- input$otherbt
     } else {
@@ -189,11 +189,11 @@ server <- function(input, output, session) {
   output$trnTable <- shiny::renderTable({
     both()
     trnStats(input$pre$datapath, input$post$datapath, field)
-  }, rownames = T)
+  }, rownames = TRUE)
   output$table <- renderTable({
     classMat(both())
   },
-  include.rownames = T)
+  include.rownames = TRUE)
   output$result  <- DT::renderDataTable({
       DT::formatStyle(
         DT::datatable(preds()),
@@ -206,20 +206,20 @@ server <- function(input, output, session) {
   output$dnPred <- shiny::downloadHandler(
     filename = "predictions.csv",
     content = function(file) {
-      write.csv(preds(), file, row.names=F)
+      write.csv(preds(), file, row.names=FALSE)
     }
   )
   output$dnClass <- shiny::downloadHandler(
     filename = "classification_matrix.csv",
     content = function(file) {
-      write.csv(classMat(both()), file, row.names=T)
+      write.csv(classMat(both()), file, row.names=TRUE)
     }
   )
   output$dnSummary <- shiny::downloadHandler(
     filename = "training_summary.csv",
     content = function(file) {
       both()
-      write.csv(trnStats(input$pre$datapath, input$post$datapath, field), file, row.names=T)
+      write.csv(trnStats(input$pre$datapath, input$post$datapath, field), file, row.names=TRUE)
     }
   )
 
@@ -236,16 +236,16 @@ server <- function(input, output, session) {
     filename = paste("iCAT_report_", Sys.time(), ".txt", sep = ""),
     content = function(file) {
       cat(paste("iCAT Run on ", Sys.time()), file=file, sep="\n")
-      cat("\nNegative Files:", file=file, append=T, sep="\n")
-      cat(input$pre$name, file=file, append=T, sep="\n")
-      cat("\nPositive Files:", file=file, append=T, sep="\n")
-      cat(input$post$name, file=file, append=T, sep="\n")
-      cat("\nField:", file=file, append=T, sep="\n")
-      cat(field, file=file, append=T, sep="\n")
-      cat("\nMax PValue:", file=file, append=T, sep="\n")
-      cat(input$pcut, file=file, append=T, sep="\n")
-      cat("\nMin Threshold of Public Sequences:", file=file, append=T, sep="\n")
-      cat(input$thresh, file=file, append=T, sep="\n")
+      cat("\nNegative Files:", file=file, append=TRUE, sep="\n")
+      cat(input$pre$name, file=file, append=TRUE, sep="\n")
+      cat("\nPositive Files:", file=file, append=TRUE, sep="\n")
+      cat(input$post$name, file=file, append=TRUE, sep="\n")
+      cat("\nField:", file=file, append=TRUE, sep="\n")
+      cat(field, file=file, append=TRUE, sep="\n")
+      cat("\nMax PValue:", file=file, append=TRUE, sep="\n")
+      cat(input$pcut, file=file, append=TRUE, sep="\n")
+      cat("\nMin Threshold of Public Sequences:", file=file, append=TRUE, sep="\n")
+      cat(input$thresh, file=file, append=TRUE, sep="\n")
 
     }
   )
@@ -260,7 +260,7 @@ server <- function(input, output, session) {
   output$dnLib <- shiny::downloadHandler(
     filename = "clonotypes_library.csv",
     content = function(file) {
-      write.csv(getLib(both()), file, row.names=F)
+      write.csv(getLib(both()), file, row.names=FALSE)
     }
   )
 

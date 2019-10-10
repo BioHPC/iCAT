@@ -30,3 +30,16 @@ List containing both negtive (n) and positive (v) clonotype percentages.
 \description{
 Main training function.
 }
+\examples{
+FIELD <- "vGeneName aminoAcid jGeneName"
+P_CUTOFF <- 0.1
+MIN_PUBLIC <- 2
+
+listPos <- tsvDir("path/to/positve/samples/")
+listNeg <- tsvDir("path/to/negative/samples/")
+
+naive <- readTrn(listNeg, FIELD, "naive")
+vaccs <- readTrn(listPos, FIELD, "vacc")  
+
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+}

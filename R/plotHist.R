@@ -1,7 +1,20 @@
 #' Plot histogram of clonotype frequencies in negative and positive samples.
 #'
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
+#' @return ggplot histogram of clonotype frequencies in negative and positive samples
 #' @export
+#' FIELD <- "vGeneName aminoAcid jGeneName"
+#' P_CUTOFF <- 0.1
+#' MIN_PUBLIC <- 2
+#' 
+#' listPos <- tsvDir("path/to/positve/samples/")
+#' listNeg <- tsvDir("path/to/negative/samples/")
+#' 
+#' naive <- readTrn(listNeg, FIELD, "naive")
+#' vaccs <- readTrn(listPos, FIELD, "vacc")  
+#' 
+#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+#' plotHist(mod)
 plotHist <- function(comb) {
   comb_ <- list(n=comb$n, v=comb$v)
   navvac_hist <-

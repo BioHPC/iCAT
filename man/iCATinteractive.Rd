@@ -6,6 +6,9 @@
 \usage{
 iCATinteractive()
 }
+\value{
+shiny app
+}
 \description{
 Launch interactive interface
 }

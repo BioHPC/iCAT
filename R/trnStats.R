@@ -5,6 +5,13 @@
 #' @param field String containing the column or columns (space-delimited) of interest.
 #' @return Dataframe containing number of samples, colonotypes, and unique seqs in training data.
 #' @export
+#' @examples 
+#' FIELD <- "vGeneName aminoAcid jGeneName"
+#' 
+#' listPos <- tsvDir("path/to/positve/samples/")
+#' listNeg <- tsvDir("path/to/negative/samples/")
+#' 
+#' trnStats(listPos, listNeg, FIELD)
 trnStats <- function(listPre, listPost, field) {
   fs <- strsplit(field, ' ')[[1]]
   

@@ -2,7 +2,7 @@
 #'
 #' @param x Input file.
 #' @param field String containing the column or columns (space-delimited) of interest.
-#' @export
+#' @return data.table of transformed input file
 #' @import data.table
 processFiles <- function(x, field) {
   fs <- strsplit(field, ' ')[[1]]
@@ -12,11 +12,11 @@ processFiles <- function(x, field) {
   #dat <- read.table(textConnection(dat), sep="\t", header=T)
   #dat <- select(dat, fs, "sequenceStatus")
   dat <- data.table::fread(x, select = c(fs, "sequenceStatus"))
-  dat <- dat[dat$sequenceStatus == "In", , drop=F]
+  dat <- dat[dat$sequenceStatus == "In", , drop=FALSE]
 
-  dat <- dat[, 1:length(fs), drop=F]
+  dat <- dat[, 1:length(fs), drop=FALSE]
 
-  dat <- dat[!duplicated(dat), ,drop=F]
-  dat <- dat[order(dat[,1:length(fs)]), ,drop=F]
+  dat <- dat[!duplicated(dat), ,drop=FALSE]
+  dat <- dat[order(dat[,1:length(fs)]), ,drop=FALSE]
   #print(dat)
 }

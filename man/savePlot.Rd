@@ -11,6 +11,12 @@ savePlot(file, plotIn)
 
 \item{plotIn}{plot object}
 }
+\value{
+ggplot2::ggsave return
+}
 \description{
 Save plot to pdf.
+}
+\examples{
+savePlot("plot.pdf", plotObj)
 }

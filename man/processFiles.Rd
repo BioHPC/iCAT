@@ -11,6 +11,9 @@ processFiles(x, field)
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
 }
+\value{
+data.table of transformed input file
+}
 \description{
 Internal function for transforming input files.
 }

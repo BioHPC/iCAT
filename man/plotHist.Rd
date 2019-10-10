@@ -9,6 +9,9 @@ plotHist(comb)
 \arguments{
 \item{comb}{List containing both negtive (n) and positive (v) clonotype percentages.}
 }
+\value{
+ggplot histogram of clonotype frequencies in negative and positive samples
+}
 \description{
 Plot histogram of clonotype frequencies in negative and positive samples.
 }

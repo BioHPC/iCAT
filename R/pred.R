@@ -6,6 +6,19 @@
 #' @param field String containing the column or columns (space-delimited) of interest.
 #' @return Matrix with \% correct predictions from training data.
 #' @export
+#' @examples
+#' FIELD <- "vGeneName aminoAcid jGeneName"
+#' P_CUTOFF <- 0.1
+#' MIN_PUBLIC <- 2
+#' 
+#' listPos <- tsvDir("path/to/positve/samples/")
+#' listNeg <- tsvDir("path/to/negative/samples/")
+#' 
+#' naive <- readTrn(listNeg, FIELD, "naive")
+#' vaccs <- readTrn(listPos, FIELD, "vacc")  
+#' 
+#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+#' pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)
@@ -18,8 +31,8 @@ pred <- function(comb, indpt, names, field) {
     x <- substring(x, 2)
     dat <-
       data.table::data.table(x)
-    dat <- dat[c(grep("^[A-Z*]", dat$x)), , drop=F]
-    dat <- unique(dat[,freq := .N, by = x], drop=F) # similar to sort | uniq -c
+    dat <- dat[c(grep("^[A-Z*]", dat$x)), , drop=FALSE]
+    dat <- unique(dat[,freq := .N, by = x], drop=FALSE) # similar to sort | uniq -c
     h <- hash::hash(dat$x, dat$freq) # build hash of counts
     return(h)
   })

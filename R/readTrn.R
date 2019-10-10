@@ -5,6 +5,13 @@
 #' @param posOrNeg String indicating whether the data is negative or positive.
 #' @return Dataframe containing unique sequences and their frequencies in the samples.
 #' @export
+#' @examples
+#' FIELD <- "vGeneName aminoAcid jGeneName"
+#' listPos <- tsvDir("path/to/positve/samples/")
+#' listNeg <- tsvDir("path/to/negative/samples/")
+#' 
+#' naive <- readTrn(listNeg, FIELD, "naive")
+#' vaccs <- readTrn(listPos, FIELD, "vacc")  
 readTrn <- function(list, field, posOrNeg) {
   if (length(list) == 0) {
     return(NULL)
