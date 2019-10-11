@@ -11,6 +11,6 @@ export(trnStats)
 export(tsvDir)
 import(data.table)
 import(shinyjs)
-import(dplyr)
+#import(dplyr)
 import(DT)
 
