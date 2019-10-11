@@ -22,8 +22,8 @@ Statistics about training data.
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
 
-listPos <- tsvDir("path/to/positve/samples/")
-listNeg <- tsvDir("path/to/negative/samples/")
+listPos <- tsvDir("iCAT/extdata/Post/")
+listNeg <- tsvDir("iCAT/extdata/Pre/")
 
 trnStats(listPos, listNeg, FIELD)
 }

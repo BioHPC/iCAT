@@ -15,3 +15,11 @@ List of *.tsv files in the directory.
 \description{
 List TSV files in a directory.
 }
+\examples{
+FIELD <- "vGeneName aminoAcid jGeneName"
+listPos <- tsvDir("iCAT/extdata/Post/")
+listNeg <- tsvDir("iCAT/extdata/Pre/")
+
+naive <- readTrn(listNeg, FIELD, "naive")
+vaccs <- readTrn(listPos, FIELD, "vacc")  
+}

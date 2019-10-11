@@ -21,8 +21,8 @@ Read input training data.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
-listPos <- tsvDir("path/to/positve/samples/")
-listNeg <- tsvDir("path/to/negative/samples/")
+listPos <- tsvDir("iCAT/extdata/Post/")
+listNeg <- tsvDir("iCAT/extdata/Pre/")
 
 naive <- readTrn(listNeg, FIELD, "naive")
 vaccs <- readTrn(listPos, FIELD, "vacc")  

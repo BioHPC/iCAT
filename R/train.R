@@ -14,8 +14,8 @@
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
 #' 
-#' listPos <- tsvDir("path/to/positve/samples/")
-#' listNeg <- tsvDir("path/to/negative/samples/")
+#' listPos <- tsvDir("iCAT/extdata/Post/")
+#' listNeg <- tsvDir("iCAT/extdata/Pre/")
 #' 
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  

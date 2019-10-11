@@ -18,5 +18,5 @@ ggplot2::ggsave return
 Save plot to pdf.
 }
 \examples{
-savePlot("plot.pdf", plotObj)
+savePlot("plot.pdf", ggplot2::qplot(1:5))
 }

@@ -11,14 +11,14 @@
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
 #' 
-#' listPos <- tsvDir("path/to/positve/samples/")
-#' listNeg <- tsvDir("path/to/negative/samples/")
+#' listPos <- tsvDir("iCAT/extdata/Post/")
+#' listNeg <- tsvDir("iCAT/extdata/Pre/")
 #' 
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-#' pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
+#' pred(mod, "iCAT/extdata/Post/KJW122_M83_D08.tsv", "unknown-sample-label", FIELD)
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)
@@ -36,7 +36,8 @@ pred <- function(comb, indpt, names, field) {
     h <- hash::hash(dat$x, dat$freq) # build hash of counts
     return(h)
   })
-
+  
+  lib <- comb$l
   idcounts <- list()
   for (i in 1:nums)
     idcounts[i] <-

@@ -5,9 +5,10 @@
 #' @return ggplot2::ggsave return
 #' @export
 #' @examples 
-#' savePlot("plot.pdf", plotObj)
+#' savePlot("plot.pdf", ggplot2::qplot(1:5))
 savePlot <- function(file, plotIn) {
   ggplot2::ggsave(
+    file,
     device = "pdf",
     plot = plotIn,
     width = 5,
