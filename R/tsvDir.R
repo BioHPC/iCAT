@@ -11,7 +11,6 @@
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  
 tsvDir <- function (dir) {
-  list <-
     list.files(
       path = dir,
       recursive = TRUE,

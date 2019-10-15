@@ -15,3 +15,17 @@ ggplot histogram of clonotype frequencies in negative and positive samples
 \description{
 Plot histogram of clonotype frequencies in negative and positive samples.
 }
+\examples{
+FIELD <- "vGeneName aminoAcid jGeneName"
+P_CUTOFF <- 0.1
+MIN_PUBLIC <- 2
+
+listPos <- tsvDir("iCAT/extdata/Post/")
+listNeg <- tsvDir("iCAT/extdata/Pre/")
+
+naive <- readTrn(listNeg, FIELD, "naive")
+vaccs <- readTrn(listPos, FIELD, "vacc")  
+
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+plotHist(mod)
+}

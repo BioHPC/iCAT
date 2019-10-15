@@ -3,6 +3,7 @@
 #' @param comb List containing both negtive (n) and positive (v) clonotype percentages.
 #' @return ggplot histogram of clonotype frequencies in negative and positive samples
 #' @export
+#' @examples
 #' FIELD <- "vGeneName aminoAcid jGeneName"
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
