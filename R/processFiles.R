@@ -12,7 +12,9 @@ processFiles <- function(x, field) {
   #dat <- read.table(textConnection(dat), sep="\t", header=T)
   #dat <- select(dat, fs, "sequenceStatus")
   dat <- data.table::fread(x, select = c(fs, "sequenceStatus"))
-  dat <- dat[dat$sequenceStatus == "In", , drop=FALSE]
+  dat0 <- dat[dat$sequenceStatus > 0, ,drop=FALSE]
+  dat1 <- dat[dat$sequenceStatus == "In", , drop=FALSE]
+  dat <- rbind(dat0, dat1)
 
   dat <- dat[, 1:length(fs), drop=FALSE]
 
