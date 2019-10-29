@@ -11,14 +11,14 @@
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
 #' 
-#' listPos <- tsvDir("iCAT/extdata/Post/")
-#' listNeg <- tsvDir("iCAT/extdata/Pre/")
+#' listPos <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
+#' listNeg <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 #' 
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-#' pred(mod, "iCAT/extdata/Post/post0.tsv", "unknown-sample-label", FIELD)
+#' pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD)
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)

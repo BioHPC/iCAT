@@ -17,8 +17,8 @@ List TSV files in a directory.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
-listPos <- tsvDir("iCAT/extdata/Post/")
-listNeg <- tsvDir("iCAT/extdata/Pre/")
+listPos <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
+listNeg <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 
 naive <- readTrn(listNeg, FIELD, "naive")
 vaccs <- readTrn(listPos, FIELD, "vacc")  
