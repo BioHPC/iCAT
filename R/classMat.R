@@ -4,12 +4,13 @@
 #' @return Matrix with \% correct predictions from training data.
 #' @export
 #' @examples
+#' library(iCAT)
 #' FIELD <- "vGeneName aminoAcid jGeneName"
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
 #' 
-#' listPos <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
-#' listNeg <- tsvDir(system.file("extdata", "Post", package="iCAT"))
+#' listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
+#' listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 #' 
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  

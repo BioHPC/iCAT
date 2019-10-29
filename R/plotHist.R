@@ -8,17 +8,18 @@
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
 #' 
-#' listPos <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
-#' listNeg <- tsvDir(system.file("extdata", "Post", package="iCAT"))
+#' listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
+#' listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 #' 
 #' naive <- readTrn(listNeg, FIELD, "naive")
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
 #' plotHist(mod)
-utils::globalVariables(c("Pvalue","Pid"))
 plotHist <- function(comb) {
   comb_ <- list(n=comb$n, v=comb$v)
+  Pvalue <- NULL
+  Pid <- NULL
   m <- melt(comb_)
   colnames(m) <- c('Pvalue', 'Pid')
   navvac_hist <-
