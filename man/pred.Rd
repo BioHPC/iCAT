@@ -33,5 +33,5 @@ naive <- readTrn(listNeg, FIELD, "naive")
 vaccs <- readTrn(listPos, FIELD, "vacc")  
 
 mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-pred(mod, "iCAT/extdata/Post/KJW122_M83_D08.tsv", "unknown-sample-label", FIELD)
+pred(mod, "iCAT/extdata/Post/post0.tsv", "unknown-sample-label", FIELD)
 }

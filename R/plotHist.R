@@ -16,10 +16,13 @@
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
 #' plotHist(mod)
+utils::globalVariables(c("Pvalue","Pid"))
 plotHist <- function(comb) {
   comb_ <- list(n=comb$n, v=comb$v)
+  m <- melt(comb_)
+  colnames(m) <- c('Pvalue', 'Pid')
   navvac_hist <-
-    ggplot2::ggplot(melt(comb_), ggplot2::aes(x = value, fill = L1)) +
+    ggplot2::ggplot(m, ggplot2::aes(x = Pvalue, fill = Pid)) +
     ggplot2::geom_histogram(color = 1) +
     ggplot2::labs(
       y = "Frequency\n",

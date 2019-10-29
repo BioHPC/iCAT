@@ -13,7 +13,8 @@ Imports:
 	shinyjs,
 	ggplot2,
 	DT,
-	hash
+	hash,
+    stats
 Suggests:
 	knitr,
 	devtools

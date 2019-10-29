@@ -114,6 +114,7 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
     dat <-
       data.table::data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    freq <- NULL
     dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
     h <- hash::hash(dat$x, dat$freq)
     return(h)
@@ -129,6 +130,7 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
     dat <-
       data.table::data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    freq <- NULL
     dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
     h <- hash::hash(dat$x, dat$freq) # build hash of counts
     return(h)

@@ -18,7 +18,7 @@
 #' vaccs <- readTrn(listPos, FIELD, "vacc")  
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-#' pred(mod, "iCAT/extdata/Post/KJW122_M83_D08.tsv", "unknown-sample-label", FIELD)
+#' pred(mod, "iCAT/extdata/Post/post0.tsv", "unknown-sample-label", FIELD)
 pred <- function(comb, indpt, names, field) {
   fs <- strsplit(field, ' ')[[1]]
   nums <- length(indpt)
@@ -32,6 +32,7 @@ pred <- function(comb, indpt, names, field) {
     dat <-
       data.table::data.table(x)
     dat <- dat[c(grep("^[A-Z*]", dat$x)), , drop=FALSE]
+    freq <- NULL
     dat <- unique(dat[,freq := .N, by = x], drop=FALSE) # similar to sort | uniq -c
     h <- hash::hash(dat$x, dat$freq) # build hash of counts
     return(h)
