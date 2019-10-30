@@ -4,7 +4,6 @@
 #' @return Matrix with \% correct predictions from training data.
 #' @export
 #' @examples
-#' library(iCAT)
 #' FIELD <- "vGeneName aminoAcid jGeneName"
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
