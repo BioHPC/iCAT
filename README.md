@@ -30,6 +30,8 @@ Using an R interface, type:
 devtools::install_github("BioHPC/iCAT") 
 ```  
 
+*Note*: Alternatively, you can clone/download the repository and run `devtools::install("iCAT/")`
+
 ## Graphical Interface Workflow
 
 In R:
