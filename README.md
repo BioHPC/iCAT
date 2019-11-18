@@ -47,11 +47,15 @@ This will launch a graphical user interface (GUI) for iCAT. The GUI has three ta
 ![Alt text](/screenshot/icat.png?raw=true "Training")
 
 
-1) In the _Training_ tab, enter your negative training samples (naïve, unexposed, uninfected, pre-infection, etc) using the `Browse` button.
+1) In the _Training_ tab, enter your negative training samples (naïve, unexposed, pre-infection, etc.) using the `Browse` button.
+
+*Example naive samples included with iCAT can be found in the inst/extdata/Pre/ directory*
 
 Individual samples’ sequencing data should be in .tsv format.
 
 2) Repeat step 1 for positive training samples (exposed, infected, etc.)
+
+*Example exposed samples included with iCAT can be found in the inst/extdata/Post/ directory*
 
 3) Choose if you want to analyze data by: 
 - `CDR3 Amino Acid Sequence` (TCRs will need the same CDR3 region to be called ‘Identical’)
@@ -96,8 +100,8 @@ MIN_PUBLIC <- 2
 2) Make lists of .tsv Positive and Negative training samples:
 
 ```     
-listPos <- tsvDir("path/to/positve/samples/")
-listNeg <- tsvDir("path/to/negative/samples/")
+listPos <- tsvDir("inst/extdata/Post/")
+listNeg <- tsvDir("inst/extdata/Pre/")
        
 ```     
  - _optional_ Collect summary statistics about training samples:
@@ -136,7 +140,7 @@ getLib(mod)
 ```     
 5) Predict sample(s) exposure based on model:
 ```
-pred(mod, "path/to/unknown", "unknown-sample-label", FIELD)
+pred(mod, "path/to/unknown-sample", "unknown-sample-label", FIELD)
 ```     
 _Note_: If predicting multiple samples, use vectors for paths and labels.
        
