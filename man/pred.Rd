@@ -4,7 +4,7 @@
 \alias{pred}
 \title{Predict the exposure status of an independent sample.}
 \usage{
-pred(comb, indpt, names, field)
+pred(comb, indpt, names, field, count, copyrange)
 }
 \arguments{
 \item{comb}{List containing both negtive (n) and positive (v) clonotype percentages.}
@@ -14,6 +14,10 @@ pred(comb, indpt, names, field)
 \item{names}{Vector of labels for independent samples.}
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
+
+\item{count}{String containing the column name for colontype counts.}
+
+\item{copyrange}{Integer Vector of the min and max copy of a sequence, within a sample, to be considered.}
 }
 \value{
 Matrix with \% correct predictions from training data.
@@ -23,15 +27,18 @@ Predict the exposure status of an independent sample.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
+COUNT <- "count (templates)"
 P_CUTOFF <- 0.1
 MIN_PUBLIC <- 2
+COPY_RANGE <- "1 99"
+
 
 listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 
-naive <- readTrn(listNeg, FIELD, "naive")
-vaccs <- readTrn(listPos, FIELD, "vacc")  
+naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")  
 
-mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD)
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
+pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD, COUNT, COPY_RANGE)
 }

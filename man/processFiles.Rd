@@ -4,12 +4,14 @@
 \alias{processFiles}
 \title{Internal function for transforming input files.}
 \usage{
-processFiles(x, field)
+processFiles(x, field, count)
 }
 \arguments{
 \item{x}{Input file.}
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
+
+\item{count}{String containing the column name for colontype counts}
 }
 \value{
 data.table of transformed input file

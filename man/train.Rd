@@ -4,8 +4,8 @@
 \alias{train}
 \title{Main training function.}
 \usage{
-train(negatives, positives, prelist, postlist, field, pcut, minpublic,
-  updateProgress)
+train(negatives, positives, prelist, postlist, field, count, copyrange,
+  pcut, minpublic, updateProgress = NULL)
 }
 \arguments{
 \item{negatives}{Dataframe of sequence frequencies in negative samples.}
@@ -17,6 +17,10 @@ train(negatives, positives, prelist, postlist, field, pcut, minpublic,
 \item{postlist}{Vector of positive training samples.}
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
+
+\item{count}{String containing the column name for colontype counts.}
+
+\item{copyrange}{Integer Vector of the min and max copy of a sequence, within a sample, to be considered.}
 
 \item{pcut}{P-value threshold for fisher-exact test.}
 
@@ -32,14 +36,16 @@ Main training function.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
+COUNT <- "count (templates)"
 P_CUTOFF <- 0.1
 MIN_PUBLIC <- 2
+COPY_RANGE <- "1 99"
 
 listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 
-naive <- readTrn(listNeg, FIELD, "naive")
-vaccs <- readTrn(listPos, FIELD, "vacc")  
+naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")  
 
-mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
 }

@@ -7,9 +7,6 @@
 #' FIELD <- "vGeneName aminoAcid jGeneName"
 #' listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 #' listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
-#' 
-#' naive <- readTrn(listNeg, FIELD, "naive")
-#' vaccs <- readTrn(listPos, FIELD, "vacc")  
 tsvDir <- function (dir) {
     list.files(
       path = dir,

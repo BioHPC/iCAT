@@ -4,6 +4,8 @@
 #' @param prelist Vector of negative training samples.
 #' @param postlist Vector of positive training samples.
 #' @param field String containing the column or columns (space-delimited) of interest.
+#' @param count String containing the column name for colontype counts.
+#' @param copyrange Integer Vector of the min and max copy of a sequence, within a sample, to be considered.
 #' @param pcut P-value threshold for fisher-exact test.
 #' @param minpublic Sequence frequency threshold to be considered.
 #' @param updateProgress Function for updating a progress bar in a Shiny interface.
@@ -11,19 +13,22 @@
 #' @export
 #' @examples
 #' FIELD <- "vGeneName aminoAcid jGeneName"
+#' COUNT <- "count (templates)"
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
+#' COPY_RANGE <- "1 99"
 #' 
 #' listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 #' listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 #' 
-#' naive <- readTrn(listNeg, FIELD, "naive")
-#' vaccs <- readTrn(listPos, FIELD, "vacc")  
+#' naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+#' vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")  
 #' 
-#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-train <- function(negatives, positives, prelist, postlist, field, pcut, minpublic, updateProgress) {
+#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
+train <- function(negatives, positives, prelist, postlist, field, count, copyrange, pcut, minpublic, updateProgress=NULL) {
 
   fs <- strsplit(field, ' ')[[1]]
+  copyrange <- as.integer(strsplit(copyrange, ' ')[[1]])
 
   numpre <- length(prelist)
   numpost <- length(postlist)
@@ -49,7 +54,8 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
 
   #pull out fisher-test relevant values and run test
   fishervalues <- all[, c(2, 3, 6, 5)]
-  #updateProgress(detail = "Calculating p-value")
+  if (!is.null(updateProgress))
+    updateProgress(detail = "Calculating p-value")
   # slow step...
   # instead of repeating fisher tests only do the unique ones then merge back
   uniquefishervalues <- unique(fishervalues[, 1:4])
@@ -98,7 +104,8 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   pval <- testvalue$pvals[which.max(testvalue$ratio)]
 
   #get final list
-  #updateProgress(detail = "Separating sequence library")
+  if (!is.null(updateProgress))
+    updateProgress(detail = "Separating sequence library")
   finally <- all[all$pvals <= pval,]
   finally <- finally[finally$vaccamounts >= as.numeric(minpublic),]
 
@@ -106,33 +113,29 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
 
 
   greplistpre <- lapply(prelist, function(x) {
-    dat <- data.table::fread(x, select = c(fs))
-    x <- rep("", length(dat[[1]]))
-    for (i in 1:length(fs))
-      x <- paste(x, dat[[i]])
-    x <- substring(x, 2)
-    dat <-
-      data.table::data.table(x)
-    dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    dat <- data.table::fread(x, select = c(fs, count))
+    dat <- dat[get(count) >= copyrange[1] & get(count) <= copyrange[2]]
+    dat <- dat[, names := do.call(paste,.SD), .SDcols=!count]
+    dat <- dat[, c(fs, count) := NULL]
+
+    dat <- dat[c(grep("^[A-Z*]", dat$names)), ]
     freq <- NULL
-    dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
-    h <- hash::hash(dat$x, dat$freq)
+    dat <- unique(dat[,freq := .N, by = names]) # similar to sort | uniq -c
+    h <- hash::hash(dat$names, dat$freq)
     return(h)
   })
 
 
   greplistppost <- lapply(postlist, function(x) {
-    dat <- data.table::fread(x, select = fs)
-    x <- rep("", length(dat[[1]]))
-    for (i in 1:length(fs))
-      x <-paste(x, dat[[i]])
-    x <- substring(x, 2)
-    dat <-
-      data.table::data.table(x)
-    dat <- dat[c(grep("^[A-Z*]", dat$x)), ]
+    dat <- data.table(fread(x, select = c(fs,count)))
+    dat <- dat[get(count) >= copyrange[1] & get(count) <= copyrange[2]]
+    dat <- dat[, names := do.call(paste,.SD), .SDcols=!count]
+    dat <- dat[, c(fs, count) := NULL]
+    
+    dat <- dat[c(grep("^[A-Z*]", dat$names)), ]
     freq <- NULL
-    dat <- unique(dat[,freq := .N, by = x]) # similar to sort | uniq -c
-    h <- hash::hash(dat$x, dat$freq) # build hash of counts
+    dat <- unique(dat[,freq := .N, by = names]) # similar to sort | uniq -c
+    h <- hash::hash(dat$names, dat$freq) # build hash of counts
     return(h)
   })
 
@@ -141,7 +144,8 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
   #find percentage of significant clonotypes
   navcounts <- list()
   for (i in 1:numpre) {
-    #updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
+    if (!is.null(updateProgress))
+      updateProgress(detail = paste0("Finding % of significant clonotypes [Negative Sample #", i, "]"))
     navcounts[i] <-
     sum(unlist(
       lapply(finally$names, function(x)
@@ -155,7 +159,8 @@ train <- function(negatives, positives, prelist, postlist, field, pcut, minpubli
 
   vaccounts <- list()
   for (i in 1:numpost) {
-    #updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
+    if (!is.null(updateProgress))
+      updateProgress(detail = paste0("Finding % of significant clonotypes [Positive Sample #", i, "]"))
     vaccounts[i] <-
     sum(unlist(
       lapply(finally$names, function(x)

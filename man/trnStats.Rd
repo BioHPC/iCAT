@@ -4,7 +4,7 @@
 \alias{trnStats}
 \title{Statistics about training data.}
 \usage{
-trnStats(listPre, listPost, field)
+trnStats(listPre, listPost, field, count, copyrange)
 }
 \arguments{
 \item{listPre}{Vector of negative training samples.}
@@ -12,6 +12,10 @@ trnStats(listPre, listPost, field)
 \item{listPost}{Vector of positive training samples.}
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
+
+\item{count}{String containing the column name for colontype counts.}
+
+\item{copyrange}{Integer Vector of the min and max copy of a sequence, within a sample, to be considered.}
 }
 \value{
 Dataframe containing number of samples, colonotypes, and unique seqs in training data.
@@ -21,9 +25,13 @@ Statistics about training data.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
+COUNT <- "count (templates)"
+P_CUTOFF <- 0.1
+MIN_PUBLIC <- 2
+COPY_RANGE <- "1 99"
 
 listPos <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 listNeg <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 
-trnStats(listPos, listNeg, FIELD)
+trnStats(listPos, listNeg, FIELD, COUNT, COPY_RANGE)
 }

@@ -50,7 +50,7 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                                  multiple = TRUE,
                                  accept = c("text/tsv", "text/tab-seperated-values", ".tsv")
                                ),
-
+                               
                                shiny::radioButtons(
                                  "field",
                                  "Analyze Clonotypes By (column names in parantheses):",
@@ -63,8 +63,21 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                                ),
                                shinyjs::hidden(shiny::textInput("otherbt", "Please provide data columns to analyze by (space-separated)",
                                                 value = "vGeneName aminoAcid jGeneName")),
+                               
+                               shiny::radioButtons(
+                                 "count",
+                                 "What column name contains clonotype counts in your data?",
+                                 choices = list(
+                                   '"count (templates)"' = "count (templates)",
+                                   '"copy"' = "copy",
+                                   "Other" = "other"
+                                 )
+                               ),
+                               shinyjs::hidden(shiny::textInput("otherCount", "Please provide the column name for clontype counts",
+                                                                value = "copy")),
                                shiny::textInput("pcut", "Max p-value", value = 0.1),
-                               shiny::textInput("thresh", "Min Threshold of Public Sequences", value = 1),
+                               shiny::textInput("copyrange", "Range of Acceptable Copies per Clonotype", value = "1 99"),
+                               shiny::textInput("thresh", "Min # of Public Sequences", value = 1),
                                shiny::tags$hr(),
 
                                shiny::actionButton("run", "Train Model"),
@@ -140,6 +153,15 @@ server <- function(input, output, session) {
       field <<- input$field
     }
   })
+  
+  observe({
+    shinyjs::toggle("otherCount", anim = TRUE, condition = input$count == "other")
+    if (input$count == "other") {
+      count <<- input$otherCount
+    } else {
+      count <<- input$count
+    }
+  })
 
   both <- shiny::eventReactive(input$run, {
     shiny::validate(shiny::need(input$pre !="", "Please select negative samples"),
@@ -155,11 +177,12 @@ server <- function(input, output, session) {
       }
       progress$set(value = value, detail = detail)
     }
+    copyrange <- input$copyrange
 
     updateProgress(detail = "Reading files")
-    naive <- readTrn(input$pre$datapath, field, "naive")
-    vaccs <- readTrn(input$post$datapath, field, "vacc")
-    anl <- train(naive, vaccs, input$pre$datapath, input$post$datapath, field, input$pcut, input$thresh, updateProgress)
+    naive <- readTrn(input$pre$datapath, field, count, copyrange, "naive")
+    vaccs <- readTrn(input$post$datapath, field, count, copyrange, "vacc")
+    anl <- train(naive, vaccs, input$pre$datapath, input$post$datapath, field, count, copyrange, input$pcut, input$thresh, updateProgress)
     shinyjs::show("h1")
     shinyjs::show("h2")
     shinyjs::show("h4")
@@ -179,7 +202,7 @@ server <- function(input, output, session) {
   preds <- shiny::eventReactive(input$pred, {
     shinyjs::show("h3")
     shinyjs::show("dnPred")
-    return(pred(both(), input$indpt$datapath, input$indpt$name, field))
+    return(pred(both(), input$indpt$datapath, input$indpt$name, field, count, copyrange))
   })
 
   output$plot <- shiny::renderPlot({
@@ -188,7 +211,7 @@ server <- function(input, output, session) {
 
   output$trnTable <- shiny::renderTable({
     both()
-    trnStats(input$pre$datapath, input$post$datapath, field)
+    trnStats(input$pre$datapath, input$post$datapath, field, count, input$copyrange)
   }, rownames = TRUE)
   output$table <- renderTable({
     classMat(both())
@@ -219,7 +242,7 @@ server <- function(input, output, session) {
     filename = "training_summary.csv",
     content = function(file) {
       both()
-      write.csv(trnStats(input$pre$datapath, input$post$datapath, field), file, row.names=TRUE)
+      write.csv(trnStats(input$pre$datapath, input$post$datapath, field, count, copyrange), file, row.names=TRUE)
     }
   )
 
@@ -242,6 +265,8 @@ server <- function(input, output, session) {
       cat(input$post$name, file=file, append=TRUE, sep="\n")
       cat("\nField:", file=file, append=TRUE, sep="\n")
       cat(field, file=file, append=TRUE, sep="\n")
+      cat("\nCount column name:", file=file, append=TRUE, sep="\n")
+      cat(count, file=file, append=TRUE, sep="\n")
       cat("\nMax PValue:", file=file, append=TRUE, sep="\n")
       cat(input$pcut, file=file, append=TRUE, sep="\n")
       cat("\nMin Threshold of Public Sequences:", file=file, append=TRUE, sep="\n")

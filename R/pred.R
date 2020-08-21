@@ -4,37 +4,48 @@
 #' @param indpt Vector of independent samples file paths.
 #' @param names Vector of labels for independent samples.
 #' @param field String containing the column or columns (space-delimited) of interest.
+#' @param count String containing the column name for colontype counts.
+#' @param copyrange Integer Vector of the min and max copy of a sequence, within a sample, to be considered.
 #' @return Matrix with \% correct predictions from training data.
 #' @export
 #' @examples
 #' FIELD <- "vGeneName aminoAcid jGeneName"
+#' COUNT <- "count (templates)"
 #' P_CUTOFF <- 0.1
 #' MIN_PUBLIC <- 2
+#' COPY_RANGE <- "1 99"
+#' 
 #' 
 #' listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 #' listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 #' 
-#' naive <- readTrn(listNeg, FIELD, "naive")
-#' vaccs <- readTrn(listPos, FIELD, "vacc")  
+#' naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+#' vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")  
 #' 
-#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
-#' pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD)
-pred <- function(comb, indpt, names, field) {
+#' mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
+#' pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD, COUNT, COPY_RANGE)
+pred <- function(comb, indpt, names, field, count, copyrange) {
   fs <- strsplit(field, ' ')[[1]]
+  copyrange <- as.integer(strsplit(copyrange, ' ')[[1]])
+  
   nums <- length(indpt)
 
   greplistppost <- lapply(indpt, function(x) {
-    dat <- fread(x, select = fs)
-    x <- rep("", length(dat[[1]]))
-    for (i in 1:length(fs))
-      x <- paste(x, dat[[i]])
-    x <- substring(x, 2)
-    dat <-
-      data.table::data.table(x)
-    dat <- dat[c(grep("^[A-Z*]", dat$x)), , drop=FALSE]
+    dat <- data.table(fread(x, select = c(fs,count)))
+    dat <- dat[get(count) >= copyrange[1] & get(count) <= copyrange[2]]
+    dat <- dat[, names := do.call(paste,.SD), .SDcols=!count]
+    dat <- dat[, c(fs, count) := NULL]
+    
+    # x <- rep("", length(dat[[1]]))
+    # for (i in 1:length(fs))
+    #   x <- paste(x, dat[[i]])
+    # x <- substring(x, 2)
+    # dat <-
+    #   data.table::data.table(x)
+    dat <- dat[c(grep("^[A-Z*]", dat$names)), , drop=FALSE]
     freq <- NULL
-    dat <- unique(dat[,freq := .N, by = x], drop=FALSE) # similar to sort | uniq -c
-    h <- hash::hash(dat$x, dat$freq) # build hash of counts
+    dat <- unique(dat[,freq := .N, by = names], drop=FALSE) # similar to sort | uniq -c
+    h <- hash::hash(dat$names, dat$freq) # build hash of counts
     return(h)
   })
   

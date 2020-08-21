@@ -4,12 +4,16 @@
 \alias{readTrn}
 \title{Read input training data.}
 \usage{
-readTrn(list, field, posOrNeg)
+readTrn(list, field, count, copyrange, posOrNeg)
 }
 \arguments{
 \item{list}{Vector of training samples.}
 
 \item{field}{String containing the column or columns (space-delimited) of interest.}
+
+\item{count}{String containing the column name for colontype counts.}
+
+\item{copyrange}{Integer of the minimum copy of a sequence, within a sample, to be considered.}
 
 \item{posOrNeg}{String indicating whether the data is negative or positive.}
 }
@@ -21,9 +25,14 @@ Read input training data.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
+COUNT <- "count (templates)"
+P_CUTOFF <- 0.1
+MIN_PUBLIC <- 2
+COPY_RANGE <- "1 99"
+
 listPos <- tsvDir(system.file("extdata", "Post", package="iCAT"))
 listNeg <- tsvDir(system.file("extdata", "Pre", package="iCAT"))
 
-naive <- readTrn(listNeg, FIELD, "naive")
-vaccs <- readTrn(listPos, FIELD, "vacc")  
+naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")
 }
