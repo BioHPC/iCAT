@@ -19,14 +19,18 @@
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
 #' plotHist(mod)
 plotHist <- function(comb) {
-  comb_ <- list(n=comb$n, v=comb$v)
+  #comb_ <- list(n=comb$n, v=comb$v)
+  m <- as.data.frame(rbind(cbind(comb$n, "n"),cbind(comb$v,"v")))
   Pvalue <- NULL
   Pid <- NULL
-  m <- melt(comb_)
+  #m <- melt(comb_)
   colnames(m) <- c('Pvalue', 'Pid')
+  m$Pid <- as.character(m$Pid)
+  m$Pvalue <- as.numeric(as.character(m$Pvalue))
+  
   navvac_hist <-
     ggplot2::ggplot(m, ggplot2::aes(x = Pvalue, fill = Pid)) +
-    ggplot2::geom_histogram(color = 1) +
+    ggplot2::geom_histogram( color = 1) +
     ggplot2::labs(
       y = "Frequency\n",
       x = "\nPercentages",
