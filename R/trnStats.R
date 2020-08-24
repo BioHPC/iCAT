@@ -29,7 +29,7 @@ trnStats <- function(listPre, listPost, field, count, copyrange) {
   DTpre <- as.data.table(pre)
   DTpre <- DTpre[get(count) >= copyrange[1] & get(count) <= copyrange[2]]
   pre <- DTpre[, lapply(.SD, sum), by = fs, .SDcols = count]
-  pref <- c(length(listPre), length(pre$copy), sum(pre$copy))
+  pref <- c(length(listPre), length(pre[[count]]), sum(pre[[count]]))
   
   post <- rbindlist(lapply(listPost, function(x) {
     dat <- fread(x, select = c(fs, count))
@@ -38,7 +38,7 @@ trnStats <- function(listPre, listPost, field, count, copyrange) {
   DTpost <- as.data.table(post)
   DTpost <- DTpost[get(count) >= copyrange[1] & get(count) <= copyrange[2]]
   post <- DTpost[, lapply(.SD, sum), by = fs, .SDcols = count]
-  postf <- c(length(listPost), length(post$copy), sum(post$copy))
+  postf <- c(length(listPost), length(post[[count]]), sum(post[[count]]))
   
   both <- rbind(pref, postf)
   colnames(both) <- c("# Samples", "# Unique Sequences", "# Clonotypes")

@@ -242,7 +242,7 @@ server <- function(input, output, session) {
     filename = "training_summary.csv",
     content = function(file) {
       both()
-      write.csv(trnStats(input$pre$datapath, input$post$datapath, field, count, copyrange), file, row.names=TRUE)
+      write.csv(trnStats(input$pre$datapath, input$post$datapath, field, count, input$copyrange), file, row.names=TRUE)
     }
   )
 
