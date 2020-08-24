@@ -93,9 +93,11 @@ After loading iCAT with `library(iCAT)`
 
 1) Define the parameters you would like to use for building the model:
 ```
-FIELD <- "vGeneName aminoAcid jGeneName"
-P_CUTOFF <- 0.1
-MIN_PUBLIC <- 2
+FIELD <- "aminoAcid vGeneName jGeneName" #"aaSeqCDR3"
+COUNT <- "copy"
+COPY_RANGE <- "1 99" 
+P_CUTOFF <- 0.11
+MIN_PUBLIC <- 1
 ```     
 2) Make lists of .tsv Positive and Negative training samples:
 
@@ -107,7 +109,7 @@ listNeg <- tsvDir("inst/extdata/Pre/")
  - _optional_ Collect summary statistics about training samples:
 
 ```     
-trnStats(listPos, listNeg, FIELD)
+trnStats(listNeg, listPos, FIELD, COUNT, COPY_RANGE)
 #>         # Samples # Clonotypes # Unique Sequences
 #>Negative         9       101942             281336
 #>Positive         9        34158              89150
@@ -115,12 +117,12 @@ trnStats(listPos, listNeg, FIELD)
 3) Read in Positive and Negative training samples:
 
 ```     
-naive <- readTrn(listNeg, FIELD, "naive")
-vaccs <- readTrn(listPos, FIELD, "vacc")       
+naive <- readTrn(listNeg, FIELD, COUNT, COPY_RANGE, "naive")
+vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")     
 ```     
 4) Build a model using the training data:
 ```      
-mod <- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)
+mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
 ```     
        
  - _optional_ Produce a table estimating the classification accuracy of the model: 
@@ -138,9 +140,10 @@ plotHist(mod)
 ```     
 getLib(mod) 
 ```     
+
 5) Predict sample(s) exposure based on model:
 ```
-pred(mod, "path/to/unknown-sample", "unknown-sample-label", FIELD)
+pred(mod, "path/to/unknown-sample", "unknown-sample-label", FIELD, COUNT, COPYRANGE)
 ```     
 _Note_: If predicting multiple samples, use vectors for paths and labels.
        
