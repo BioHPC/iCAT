@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -133,20 +133,43 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>ggplot histogram of clonotype frequencies in negative and positive samples</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>FIELD</span> <span class='kw'>&lt;-</span> <span class='st'>"vGeneName aminoAcid jGeneName"</span>
+<span class='no'>COUNT</span> <span class='kw'>&lt;-</span> <span class='st'>"count (templates)"</span>
+<span class='no'>P_CUTOFF</span> <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
+<span class='no'>MIN_PUBLIC</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>
+<span class='no'>COPY_RANGE</span> <span class='kw'>&lt;-</span> <span class='st'>"1 99"</span>
+
+<span class='no'>listPos</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Post"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
+<span class='no'>listNeg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Pre"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
+
+<span class='no'>naive</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listNeg</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"naive"</span>)
+<span class='no'>vaccs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"vacc"</span>)
+
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='train.html'>train</a></span>(<span class='no'>naive</span>, <span class='no'>vaccs</span>, <span class='no'>listNeg</span>, <span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='no'>P_CUTOFF</span>, <span class='no'>MIN_PUBLIC</span>, <span class='kw'>NULL</span>)
+<span class='fu'>plotHist</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; <span class='message'>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></div><div class='img'><img src='plotHist-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Ahmad Rajeh, Kyle Wolf, Courtney schiebout, Tae-Hyuk Ahn, Richard DiPaolo.</p>
+  <p>Developed by Ahmad Rajeh.</p>
 </div>
 
 <div class="pkgdown">

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>processFiles</span>(<span class='no'>x</span>, <span class='no'>field</span>)</pre>
+    <pre class="usage"><span class='fu'>processFiles</span>(<span class='no'>x</span>, <span class='no'>field</span>, <span class='no'>count</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -135,7 +135,15 @@
       <th>field</th>
       <td><p>String containing the column or columns (space-delimited) of interest.</p></td>
     </tr>
+    <tr>
+      <th>count</th>
+      <td><p>String containing the column name for colontype counts</p></td>
+    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data.table of transformed input file</p>
     
 
   </div>
@@ -143,14 +151,16 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Ahmad Rajeh, Kyle Wolf, Courtney schiebout, Tae-Hyuk Ahn, Richard DiPaolo.</p>
+  <p>Developed by Ahmad Rajeh.</p>
 </div>
 
 <div class="pkgdown">

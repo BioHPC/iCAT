@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -119,7 +119,7 @@ iCATinteractive()</a></code></pre>
 </ol>
 <p>A progress bar will show on the bottom-right corner to update on the satatus of training. After finishing, the <em>training</em> tab will show some exploratory tables and a figure regarding the training data and the model built, which can all be downloaded to the user’s machine. In addition, the <em>library</em> and <em>prediction</em> tab will unlock.</p>
 <p><strong>Library:</strong></p>
-<p><br><img src="https://github.com/BioHPC/iCAT/blob/master/man/figures/lib-icat.png?raw=true" title="Library"><br></p>
+<p><br><img src="https://github.com/BioHPC/iCAT/blob/master/man/figures/lib-icat2.png?raw=true" title="Library"><br></p>
 <p>The <em>Library</em> tab displays a table consisting of the “target associated receptor sequences” (TARS), determined to be statistically associated with exposure to the target/agent/pathogen. The table displays each sequence, number of positive and negative training samples the sequence is present in/absent from, and how statistically associated the sequence is to the positive training data (<em>p</em>-value). The table can be downloaded to the user’s computer for further analysis using excel, commandline, etc using the download <code>Table</code> button below the table.</p>
 <p><strong>Prediction:</strong></p>
 <p><br><img src="https://github.com/BioHPC/iCAT/blob/master/man/figures/pred-icat.png?raw=true" title="Prediction"><br></p>
@@ -135,52 +135,106 @@ iCATinteractive()</a></code></pre>
 <a href="#r-interface-workflow" class="anchor"></a>R-interface Workflow</h2>
 <p>After loading iCAT with <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(iCAT)</a></code></p>
 <ol style="list-style-type: decimal">
-<li>
-<p>Define the parameters you would like to use for building the model:</p>
-<pre><code>FIELD &lt;- "vGeneName aminoAcid jGeneName"
-P_CUTOFF &lt;- 0.1
-MIN_PUBLIC &lt;- 2</code></pre>
-</li>
-<li>
-<p>Make lists of .tsv Positive and Negative training samples:</p>
-<pre><code>listPos &lt;- tsvDir("path/to/positve/samples/")
-listNeg &lt;- tsvDir("path/to/negative/samples/")</code></pre>
-</li>
+<li>Define the parameters you would like to use for building the model:</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(iCAT)
+## Loading required package: data.table
+## 
+## Attaching package: 'iCAT'
+## The following object is masked from 'package:grDevices':
+## 
+##     savePlot
+FIELD &lt;-<span class="st"> "aminoAcid vGeneName jGeneName"</span> <span class="co">#"aaSeqCDR3"</span>
+COUNT &lt;-<span class="st"> "count (templates)"</span>
+COPY_RANGE &lt;-<span class="st"> "1 99"</span> 
+P_CUTOFF &lt;-<span class="st"> </span><span class="fl">0.11</span>
+MIN_PUBLIC &lt;-<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Make lists of .tsv Positive and Negative training samples:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listPos &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Post/"</span>)
+listNeg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Pre/"</span>)</code></pre></div>
 <ul>
 <li>
-<p><em>optional</em> Collect summary statistics about training samples:</p>
-<pre><code><a href="../reference/trnStats.html">trnStats(listPos, listNeg, FIELD)
-#&gt;         # Samples # Clonotypes # Unique Sequences
-#&gt;Negative         9       101942             281336
-#&gt;Positive         9        34158              89150</a></code></pre>
-</li>
+<em>optional</em> Collect summary statistics about training samples:</li>
 </ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/trnStats.html">trnStats</a></span>(listNeg, listPos, FIELD, COUNT, COPY_RANGE)
+##          # Samples # Unique Sequences # Clonotypes
+## Negative         9             119654       281336
+## Positive         9              37331        88762</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>
-<p>Read in Positive and Negative training samples:</p>
-<pre><code>naive &lt;- readTrn(listNeg, FIELD, "naive")
-vaccs &lt;- readTrn(listPos, FIELD, "vacc")       </code></pre>
-</li>
-<li>
-<p>Build a model using the training data:</p>
-<pre><code>mod &lt;- train(naive, vaccs, listNeg, listPos, FIELD, P_CUTOFF, MIN_PUBLIC, NULL)</code></pre>
-</li>
+<li>Read in Positive and Negative training samples:</li>
 </ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">naive &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readTrn.html">readTrn</a></span>(listNeg, FIELD, COUNT, COPY_RANGE, <span class="st">"naive"</span>)
+vaccs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readTrn.html">readTrn</a></span>(listPos, FIELD, COUNT, COPY_RANGE, <span class="st">"vacc"</span>)       </code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Build a model using the training data:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.html">train</a></span>(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, <span class="ot">NULL</span>)</code></pre></div>
 <ul>
 <li>
-<p><em>optional</em> Produce a table estimating the classification accuracy of the model:</p>
-<pre><code><a href="../reference/classMat.html">classMat(mod)</a></code></pre>
-</li>
-<li>
-<p><em>optional</em> Produce a figure showing % of TCR associated with positve samples in positive and negative samples:</p>
-<pre><code><a href="../reference/plotHist.html">plotHist(mod)</a></code></pre>
-</li>
-<li>
-<p><em>optional</em> Produce the library of TCR sequences associated with positve samples:</p>
-<pre><code><a href="../reference/getLib.html">getLib(mod) </a></code></pre>
-</li>
+<em>optional</em> Produce a table estimating the classification accuracy of the model:</li>
 </ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/classMat.html">classMat</a></span>(mod)
+##          Unexposed Exposed % Correct
+## Negative         9       0       100
+## Positive         0       9       100</code></pre></div>
+<ul>
+<li>
+<em>optional</em> Produce a figure showing % of TCR associated with positve samples in positive and negative samples:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plotHist.html">plotHist</a></span>(mod)
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre></div>
+<p><img src="iCAT_files/figure-html/unnamed-chunk-8-1.png" width="100%"> - <em>optional</em> Produce the library of TCR sequences associated with positve samples:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/getLib.html">getLib</a></span>(mod) 
+##                                   Sequence Positive Present
+##  1:   CASGDRNSGNTLYF TCRBV13-02 TCRBJ01-03                4
+##  2:   CASRRDWGDYEQYF TCRBV15-01 TCRBJ02-07                3
+##  3:     CASSFNQDTQYF TCRBV04-01 TCRBJ02-05                5
+##  4:   CASSLAGSNERLFF TCRBV16-01 TCRBJ01-04                3
+##  5:  CASSLDNSYNSPLYF TCRBV26-01 TCRBJ01-06                4
+##  6:     CASSLEGGEQYF TCRBV12-01 TCRBJ02-07                3
+##  7:   CASSLGASAETLYF TCRBV19-01 TCRBJ02-03                3
+##  8:   CASSLGGNYAEQFF TCRBV03-01 TCRBJ02-01                3
+##  9:     CASSLRNSDYTF TCRBV12-01 TCRBJ01-02                3
+## 10:  CASSLTGGNYAEQFF TCRBV03-01 TCRBJ02-01                3
+## 11:   CASSQEGKNSDYTF TCRBV02-01 TCRBJ01-02                3
+## 12:  CASSQETVSNERLFF TCRBV02-01 TCRBJ01-04                3
+## 13:   CASSQGQTNSDYTF TCRBV02-01 TCRBJ01-02                3
+## 14:       CASSQYEQYF TCRBV02-01 TCRBJ02-07                3
+## 15:      CAWSPNTEVFF TCRBV31-01 TCRBJ01-01                3
+## 16:  CTCSADLGSQNTLYF TCRBV01-01 TCRBJ02-04                3
+## 17:     CTCSADRDTQYF TCRBV01-01 TCRBJ02-05                3
+## 18:       CASGAETLYF TCRBV13-02 TCRBJ02-03                4
+## 19:  CASGDAGTANTEVFF TCRBV13-02 TCRBJ01-01                5
+## 20:    CGARGQANTEVFF TCRBV20-01 TCRBJ01-01                6
+## 21:    CGARGQSNTEVFF TCRBV20-01 TCRBJ01-01                5
+## 22: CASSQGTGGNYAEQFF TCRBV02-01 TCRBJ02-01                7
+##                                   Sequence Positive Present
+##     Positive Absent Negative Present Negative Absent     P-Value
+##  1:               5                1               8 0.102941176
+##  2:               6                0               9 0.102941176
+##  3:               4                2               7 0.102941176
+##  4:               6                0               9 0.102941176
+##  5:               5                1               8 0.102941176
+##  6:               6                0               9 0.102941176
+##  7:               6                0               9 0.102941176
+##  8:               6                0               9 0.102941176
+##  9:               6                0               9 0.102941176
+## 10:               6                0               9 0.102941176
+## 11:               6                0               9 0.102941176
+## 12:               6                0               9 0.102941176
+## 13:               6                0               9 0.102941176
+## 14:               6                0               9 0.102941176
+## 15:               6                0               9 0.102941176
+## 16:               6                0               9 0.102941176
+## 17:               6                0               9 0.102941176
+## 18:               5                0               9 0.041176471
+## 19:               4                1               8 0.065610860
+## 20:               3                1               8 0.024886878
+## 21:               4                0               9 0.014705882
+## 22:               2                1               8 0.007610037
+##     Positive Absent Negative Present Negative Absent     P-Value</code></pre></div>
 </div>
   </div>
 
@@ -199,7 +253,7 @@ vaccs &lt;- readTrn(listPos, FIELD, "vacc")       </code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Ahmad Rajeh, Kyle Wolf, Courtney schiebout, Tae-Hyuk Ahn, Richard DiPaolo.</p>
+  <p>Developed by Ahmad Rajeh.</p>
 </div>
 
 <div class="pkgdown">

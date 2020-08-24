@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">iCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -122,8 +122,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>train</span>(<span class='no'>negatives</span>, <span class='no'>positives</span>, <span class='no'>prelist</span>, <span class='no'>postlist</span>, <span class='no'>field</span>, <span class='no'>pcut</span>, <span class='no'>minpublic</span>,
-  <span class='no'>updateProgress</span>)</pre>
+    <pre class="usage"><span class='fu'>train</span>(<span class='no'>negatives</span>, <span class='no'>positives</span>, <span class='no'>prelist</span>, <span class='no'>postlist</span>, <span class='no'>field</span>, <span class='no'>count</span>, <span class='no'>copyrange</span>,
+  <span class='no'>pcut</span>, <span class='no'>minpublic</span>, <span class='kw'>updateProgress</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,6 +149,14 @@
       <td><p>String containing the column or columns (space-delimited) of interest.</p></td>
     </tr>
     <tr>
+      <th>count</th>
+      <td><p>String containing the column name for colontype counts.</p></td>
+    </tr>
+    <tr>
+      <th>copyrange</th>
+      <td><p>Integer Vector of the min and max copy of a sequence, within a sample, to be considered.</p></td>
+    </tr>
+    <tr>
       <th>pcut</th>
       <td><p>P-value threshold for fisher-exact test.</p></td>
     </tr>
@@ -167,6 +175,20 @@
     <p>List containing both negtive (n) and positive (v) clonotype percentages.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>FIELD</span> <span class='kw'>&lt;-</span> <span class='st'>"vGeneName aminoAcid jGeneName"</span>
+<span class='no'>COUNT</span> <span class='kw'>&lt;-</span> <span class='st'>"count (templates)"</span>
+<span class='no'>P_CUTOFF</span> <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
+<span class='no'>MIN_PUBLIC</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>
+<span class='no'>COPY_RANGE</span> <span class='kw'>&lt;-</span> <span class='st'>"1 99"</span>
+
+<span class='no'>listPos</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Post"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
+<span class='no'>listNeg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Pre"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
+
+<span class='no'>naive</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listNeg</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"naive"</span>)
+<span class='no'>vaccs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"vacc"</span>)
+
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>train</span>(<span class='no'>naive</span>, <span class='no'>vaccs</span>, <span class='no'>listNeg</span>, <span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='no'>P_CUTOFF</span>, <span class='no'>MIN_PUBLIC</span>, <span class='kw'>NULL</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -174,14 +196,16 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Ahmad Rajeh, Kyle Wolf, Courtney schiebout, Tae-Hyuk Ahn, Richard DiPaolo.</p>
+  <p>Developed by Ahmad Rajeh.</p>
 </div>
 
 <div class="pkgdown">
