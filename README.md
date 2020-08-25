@@ -42,6 +42,8 @@ iCATinteractive()
 
 This will launch a graphical user interface (GUI) for iCAT. The GUI has three tabs, separating major functionalities: training, library, and prediction.
 
+*Note*: If the iCATinteractive() cannot launch the html with an error as "Error in loadNamespace: namespace ‘htmltools’ 0.X.X is already loaded, but >= 0.X.Y is required", please restart the R session.
+
 **Training:**
 
 ![Alt text](/screenshot/icat.png?raw=true "Training")
