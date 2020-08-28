@@ -66,7 +66,7 @@ Individual samples’ sequencing data should be in .tsv format.
 
 4) Choose the `Max p-value`, which determines the minimal degree of statistical significance that iCAT will accept as being potentially "associated" with the positive group. Defaults to _p_ < 0.1.
 
-5)	Choose the `Min Threshold of Public Sequences`, which determines the minimum number of training samples a TCR sequence must be observed in to be considered as potentially "associated" with the positive group. Defaults to 1. Recommend setting at 10% of positive training samples. E.g. if there are 30 positive training samples, a recommended minimum threshold is 3. 
+5)	Choose the `Range of Acceptable Copies per Clonotype`, which determines the minimum and maximum number of copies a clonotype must have to be included in the analysis. Enter as a space delimted range. Defaults to `1 99`. An example of when this could be useful: in case there is expected artifacts in the processing/data that overestimate the copy number of some clonotypes.
 
 6) Once all options are selected click `Train Model`
 
