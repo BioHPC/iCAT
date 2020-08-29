@@ -68,6 +68,8 @@ Individual samples’ sequencing data should be in .tsv format.
 
 5)	Choose the `Range of Acceptable Copies per Clonotype`, which determines the minimum and maximum number of copies a clonotype must have to be included in the analysis. Enter as a space delimted range. Defaults to `1 99`. An example of when this could be useful: in case there is expected artifacts in the processing/data that overestimate the copy number of some clonotypes.
 
+5)	Choose the `Min Threshold of Public Sequences`, which determines the minimum number of training samples a TCR sequence must be observed in to be considered as potentially "associated" with the positive group. Defaults to 1. Recommend setting at 10% of positive training samples. E.g. if there are 30 positive training samples, a recommended minimum threshold is 3. 
+
 6) Once all options are selected click `Train Model`
 
 A progress bar will show on the bottom-right corner to update on the satatus of training. After finishing, the _training_ tab will show some exploratory tables and a figure regarding the training data and the model built, which can all be downloaded to the user's machine. In addition, the _library_ and _prediction_ tab will unlock.
