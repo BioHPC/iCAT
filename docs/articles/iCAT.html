@@ -114,7 +114,7 @@ iCATinteractive()</a></code></pre>
 </ul>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Choose the <code>Max p-value</code>, which determines the minimal degree of statistical significance that iCAT will accept as being potentially “associated” with the positive group. Defaults to <em>p</em> &lt; 0.1.</p></li>
-<li><p>Choose the <code>Min Threshold of Public Sequences</code>, which determines the minimum number of training samples a TCR sequence must be observed in to be considered as potentially “associated” with the positive group. Defaults to 1. Recommend setting at 10% of positive training samples. E.g. if there are 30 positive training samples, a recommended minimum threshold is 3.</p></li>
+<li><p>Choose the <code>Range of Acceptable Copies per Clonotype</code>, which determines the minimum and maximum number of copies a clonotype must have to be included in the analysis. Enter as a space delimted range. Defaults to <code>1 99</code>. An example of when this could be useful: in case there is expected artifacts in the processing/data that overestimate the copy number of some clonotypes.</p></li>
 <li><p>Once all options are selected click <code>Train Model</code></p></li>
 </ol>
 <p>A progress bar will show on the bottom-right corner to update on the satatus of training. After finishing, the <em>training</em> tab will show some exploratory tables and a figure regarding the training data and the model built, which can all be downloaded to the user’s machine. In addition, the <em>library</em> and <em>prediction</em> tab will unlock.</p>
@@ -145,28 +145,28 @@ iCATinteractive()</a></code></pre>
 ## 
 ##     savePlot
 FIELD &lt;-<span class="st"> "aminoAcid vGeneName jGeneName"</span> <span class="co">#"aaSeqCDR3"</span>
-COUNT &lt;-<span class="st"> "count (templates)"</span>
+COUNT &lt;-<span class="st"> "copy"</span>
 COPY_RANGE &lt;-<span class="st"> "1 99"</span> 
 P_CUTOFF &lt;-<span class="st"> </span><span class="fl">0.11</span>
 MIN_PUBLIC &lt;-<span class="st"> </span><span class="dv">1</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Make lists of .tsv Positive and Negative training samples:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listPos &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Post/"</span>)
-listNeg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Pre/"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listNeg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"~/Downloads/iCAT Data/Negative Training Data/"</span>)
+listPos &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"~/Downloads/iCAT Data/Positive Training Data/"</span>)</code></pre></div>
 <ul>
 <li>
 <em>optional</em> Collect summary statistics about training samples:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/trnStats.html">trnStats</a></span>(listNeg, listPos, FIELD, COUNT, COPY_RANGE)
 ##          # Samples # Unique Sequences # Clonotypes
-## Negative         9             119654       281336
-## Positive         9              37331        88762</code></pre></div>
+## Negative        32             714522      2049383
+## Positive        58             573612      1581438</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Read in Positive and Negative training samples:</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">naive &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readTrn.html">readTrn</a></span>(listNeg, FIELD, COUNT, COPY_RANGE, <span class="st">"naive"</span>)
-vaccs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readTrn.html">readTrn</a></span>(listPos, FIELD, COUNT, COPY_RANGE, <span class="st">"vacc"</span>)       </code></pre></div>
+vaccs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readTrn.html">readTrn</a></span>(listPos, FIELD, COUNT, COPY_RANGE, <span class="st">"vacc"</span>)      </code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Build a model using the training data:</li>
 </ol>
@@ -177,8 +177,8 @@ vaccs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readT
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/classMat.html">classMat</a></span>(mod)
 ##          Unexposed Exposed % Correct
-## Negative         9       0       100
-## Positive         0       9       100</code></pre></div>
+## Negative        32       0       100
+## Positive         0      58       100</code></pre></div>
 <ul>
 <li>
 <em>optional</em> Produce a figure showing % of TCR associated with positve samples in positive and negative samples:</li>
@@ -187,54 +187,30 @@ vaccs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readT
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre></div>
 <p><img src="iCAT_files/figure-html/unnamed-chunk-8-1.png" width="100%"> - <em>optional</em> Produce the library of TCR sequences associated with positve samples:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/getLib.html">getLib</a></span>(mod) 
-##                                   Sequence Positive Present
-##  1:   CASGDRNSGNTLYF TCRBV13-02 TCRBJ01-03                4
-##  2:   CASRRDWGDYEQYF TCRBV15-01 TCRBJ02-07                3
-##  3:     CASSFNQDTQYF TCRBV04-01 TCRBJ02-05                5
-##  4:   CASSLAGSNERLFF TCRBV16-01 TCRBJ01-04                3
-##  5:  CASSLDNSYNSPLYF TCRBV26-01 TCRBJ01-06                4
-##  6:     CASSLEGGEQYF TCRBV12-01 TCRBJ02-07                3
-##  7:   CASSLGASAETLYF TCRBV19-01 TCRBJ02-03                3
-##  8:   CASSLGGNYAEQFF TCRBV03-01 TCRBJ02-01                3
-##  9:     CASSLRNSDYTF TCRBV12-01 TCRBJ01-02                3
-## 10:  CASSLTGGNYAEQFF TCRBV03-01 TCRBJ02-01                3
-## 11:   CASSQEGKNSDYTF TCRBV02-01 TCRBJ01-02                3
-## 12:  CASSQETVSNERLFF TCRBV02-01 TCRBJ01-04                3
-## 13:   CASSQGQTNSDYTF TCRBV02-01 TCRBJ01-02                3
-## 14:       CASSQYEQYF TCRBV02-01 TCRBJ02-07                3
-## 15:      CAWSPNTEVFF TCRBV31-01 TCRBJ01-01                3
-## 16:  CTCSADLGSQNTLYF TCRBV01-01 TCRBJ02-04                3
-## 17:     CTCSADRDTQYF TCRBV01-01 TCRBJ02-05                3
-## 18:       CASGAETLYF TCRBV13-02 TCRBJ02-03                4
-## 19:  CASGDAGTANTEVFF TCRBV13-02 TCRBJ01-01                5
-## 20:    CGARGQANTEVFF TCRBV20-01 TCRBJ01-01                6
-## 21:    CGARGQSNTEVFF TCRBV20-01 TCRBJ01-01                5
-## 22: CASSQGTGGNYAEQFF TCRBV02-01 TCRBJ02-01                7
-##                                   Sequence Positive Present
-##     Positive Absent Negative Present Negative Absent     P-Value
-##  1:               5                1               8 0.102941176
-##  2:               6                0               9 0.102941176
-##  3:               4                2               7 0.102941176
-##  4:               6                0               9 0.102941176
-##  5:               5                1               8 0.102941176
-##  6:               6                0               9 0.102941176
-##  7:               6                0               9 0.102941176
-##  8:               6                0               9 0.102941176
-##  9:               6                0               9 0.102941176
-## 10:               6                0               9 0.102941176
-## 11:               6                0               9 0.102941176
-## 12:               6                0               9 0.102941176
-## 13:               6                0               9 0.102941176
-## 14:               6                0               9 0.102941176
-## 15:               6                0               9 0.102941176
-## 16:               6                0               9 0.102941176
-## 17:               6                0               9 0.102941176
-## 18:               5                0               9 0.041176471
-## 19:               4                1               8 0.065610860
-## 20:               3                1               8 0.024886878
-## 21:               4                0               9 0.014705882
-## 22:               2                1               8 0.007610037
-##     Positive Absent Negative Present Negative Absent     P-Value</code></pre></div>
+##                                    Sequence Positive Present
+##   1:   CASGARDNYAEQFF TCRBV13-02 TCRBJ02-01                5
+##   2:      CASGAYAEQFF TCRBV13-02 TCRBJ02-01                5
+##   3:   CASGDAGAEDTQYF TCRBV13-02 TCRBJ02-05                5
+##   4:  CASGDAGGTQDTQYF TCRBV13-02 TCRBJ02-05                5
+##   5: CASGDAGGVSQNTLYF TCRBV13-02 TCRBJ02-04                5
+##  ---                                                        
+## 310:  CASSSTGYNNQAPLF TCRBV14-01 TCRBJ01-05               11
+## 311:  CTCSAEGVSNERLFF TCRBV01-01 TCRBJ01-04               11
+## 312: CASSPRTGGSAETLYF TCRBV03-01 TCRBJ02-03               14
+## 313:    CASSRDKQDTQYF TCRBV19-01 TCRBJ02-05               13
+## 314:     CASSLGFYEQYF TCRBV03-01 TCRBJ02-07               14
+##      Positive Absent Negative Present Negative Absent     P-Value
+##   1:              53                0              32 0.104259211
+##   2:              53                0              32 0.104259211
+##   3:              53                0              32 0.104259211
+##   4:              53                0              32 0.104259211
+##   5:              53                0              32 0.104259211
+##  ---                                                             
+## 310:              47                0              32 0.005472755
+## 311:              47                0              32 0.005472755
+## 312:              44                1              31 0.007737122
+## 313:              45                0              32 0.001920171
+## 314:              44                0              32 0.001122178</code></pre></div>
 </div>
   </div>
 

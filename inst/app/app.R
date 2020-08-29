@@ -55,8 +55,8 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                                  "field",
                                  "Analyze Clonotypes By (column names in parantheses):",
                                  choices = list(
-                                   "CDR3 Amino Acid (aminoAcid)" = "aminoAcid",
                                    "TCRV-CDR3-TCRJ (vGeneName aminoAcid jGeneName)" = "vGeneName aminoAcid jGeneName",
+                                   "CDR3 Amino Acid (aminoAcid)" = "aminoAcid",
                                    "Nucleic Acid (nucleotide)" = "nucleotide",
                                    "Other" = "other"
                                  )
