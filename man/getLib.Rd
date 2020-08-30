@@ -17,7 +17,7 @@ Dataframe of TARSs library.
 }
 \examples{
 FIELD <- "vGeneName aminoAcid jGeneName"
-COUNT <- "count (templates)"
+COUNT <- "copy"
 P_CUTOFF <- 0.1
 MIN_PUBLIC <- 2
 COPY_RANGE <- "1 99"

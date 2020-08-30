@@ -115,6 +115,7 @@ iCATinteractive()</a></code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Choose the <code>Max p-value</code>, which determines the minimal degree of statistical significance that iCAT will accept as being potentially “associated” with the positive group. Defaults to <em>p</em> &lt; 0.1.</p></li>
 <li><p>Choose the <code>Range of Acceptable Copies per Clonotype</code>, which determines the minimum and maximum number of copies a clonotype must have to be included in the analysis. Enter as a space delimted range. Defaults to <code>1 99</code>. An example of when this could be useful: in case there is expected artifacts in the processing/data that overestimate the copy number of some clonotypes.</p></li>
+<li><p>Choose the <code>Min Threshold of Public Sequences</code>, which determines the minimum number of training samples a TCR sequence must be observed in to be considered as potentially “associated” with the positive group. Defaults to 1. Recommend setting at 10% of positive training samples. E.g. if there are 30 positive training samples, a recommended minimum threshold is 3.</p></li>
 <li><p>Once all options are selected click <code>Train Model</code></p></li>
 </ol>
 <p>A progress bar will show on the bottom-right corner to update on the satatus of training. After finishing, the <em>training</em> tab will show some exploratory tables and a figure regarding the training data and the model built, which can all be downloaded to the user’s machine. In addition, the <em>library</em> and <em>prediction</em> tab will unlock.</p>
@@ -152,8 +153,8 @@ MIN_PUBLIC &lt;-<span class="st"> </span><span class="dv">1</span></code></pre><
 <ol start="2" style="list-style-type: decimal">
 <li>Make lists of .tsv Positive and Negative training samples:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listNeg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"~/Downloads/iCAT Data/Negative Training Data/"</span>)
-listPos &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"~/Downloads/iCAT Data/Positive Training Data/"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">listNeg &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Pre/"</span>)
+listPos &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tsvDir.html">tsvDir</a></span>(<span class="st">"../inst/extdata/Post/"</span>)</code></pre></div>
 <ul>
 <li>
 <em>optional</em> Collect summary statistics about training samples:</li>

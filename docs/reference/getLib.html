@@ -140,7 +140,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>FIELD</span> <span class='kw'>&lt;-</span> <span class='st'>"vGeneName aminoAcid jGeneName"</span>
-<span class='no'>COUNT</span> <span class='kw'>&lt;-</span> <span class='st'>"count (templates)"</span>
+<span class='no'>COUNT</span> <span class='kw'>&lt;-</span> <span class='st'>"copy"</span>
 <span class='no'>P_CUTOFF</span> <span class='kw'>&lt;-</span> <span class='fl'>0.1</span>
 <span class='no'>MIN_PUBLIC</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>
 <span class='no'>COPY_RANGE</span> <span class='kw'>&lt;-</span> <span class='st'>"1 99"</span>
@@ -148,8 +148,212 @@
 <span class='no'>listPos</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Post"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
 <span class='no'>listNeg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tsvDir.html'>tsvDir</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"Pre"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"iCAT"</span>))
 
-<span class='no'>naive</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listNeg</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"naive"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='error'>Error in .checkTypos(e, names_x): Object 'count (templates)' not found amongst vGeneName, aminoAcid, jGeneName, sequenceStatus</span></div><div class='input'><span class='no'>vaccs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"vacc"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column name 'count (templates)' not found in column name header (case sensitive), skipping.</span></div><div class='output co'>#&gt; <span class='error'>Error in .checkTypos(e, names_x): Object 'count (templates)' not found amongst vGeneName, aminoAcid, jGeneName, sequenceStatus</span></div><div class='input'>
-<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='train.html'>train</a></span>(<span class='no'>naive</span>, <span class='no'>vaccs</span>, <span class='no'>listNeg</span>, <span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='no'>P_CUTOFF</span>, <span class='no'>MIN_PUBLIC</span>, <span class='kw'>NULL</span>)</div><div class='output co'>#&gt; <span class='error'>Error in train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE,     P_CUTOFF, MIN_PUBLIC, NULL): object 'naive' not found</span></div><div class='input'><span class='fu'>getLib</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt; <span class='error'>Error in getLib(mod): object 'mod' not found</span></div></pre>
+<span class='no'>naive</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listNeg</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"naive"</span>)
+<span class='no'>vaccs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readTrn.html'>readTrn</a></span>(<span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='st'>"vacc"</span>)
+
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='train.html'>train</a></span>(<span class='no'>naive</span>, <span class='no'>vaccs</span>, <span class='no'>listNeg</span>, <span class='no'>listPos</span>, <span class='no'>FIELD</span>, <span class='no'>COUNT</span>, <span class='no'>COPY_RANGE</span>, <span class='no'>P_CUTOFF</span>, <span class='no'>MIN_PUBLIC</span>, <span class='kw'>NULL</span>)
+<span class='fu'>getLib</span>(<span class='no'>mod</span>)</div><div class='output co'>#&gt;                                   Sequence Positive Present Positive Absent
+#&gt;  1:   TCRBV01-01 CTCSADINQDTQYF TCRBJ02-05                6              52
+#&gt;  2:   TCRBV01-01 CTCSAGGGAGEQYF TCRBJ02-07                6              52
+#&gt;  3:   TCRBV01-01 CTCSAGTGHTEVFF TCRBJ01-01                6              52
+#&gt;  4:    TCRBV01-01 CTCSARDTYEQYF TCRBJ02-07                6              52
+#&gt;  5:  TCRBV01-01 CTCSARLGGYAEQFF TCRBJ02-01                6              52
+#&gt;  6:  TCRBV02-01 CASSQDGGGTGQLYF TCRBJ02-02                6              52
+#&gt;  7:  TCRBV02-01 CASSQDPGGGYEQYF TCRBJ02-07                6              52
+#&gt;  8:  TCRBV03-01 CASSLAPDSGNTLYF TCRBJ01-03                6              52
+#&gt;  9:    TCRBV03-01 CASSLNSNSDYTF TCRBJ01-02                6              52
+#&gt; 10:    TCRBV03-01 CASSLSGGYEQYF TCRBJ02-07                6              52
+#&gt; 11:   TCRBV03-01 CASSPDSSAETLYF TCRBJ02-03                6              52
+#&gt; 12:   TCRBV03-01 CASSPGQGDTEVFF TCRBJ01-01                6              52
+#&gt; 13:     TCRBV03-01 CASSSGDSDYTF TCRBJ01-02                6              52
+#&gt; 14:    TCRBV03-01 CASSWTGQDTQYF TCRBJ02-05                6              52
+#&gt; 15:   TCRBV04-01 CASSLRDGQDTQYF TCRBJ02-05                6              52
+#&gt; 16:   TCRBV04-01 CASSWTGSGNTLYF TCRBJ01-03                6              52
+#&gt; 17:     TCRBV04-01 CASSYREDTQYF TCRBJ02-05                6              52
+#&gt; 18:   TCRBV05-01 CASSPGTNNQAPLF TCRBJ01-05                6              52
+#&gt; 19:    TCRBV05-01 CASSQGYQDTQYF TCRBJ02-05                6              52
+#&gt; 20:      TCRBV12-01 CASSLQNTLYF TCRBJ02-04                6              52
+#&gt; 21:   TCRBV12-01 CASSPDRGQNTLYF TCRBJ02-04                6              52
+#&gt; 22:      TCRBV12-01 CASSPPGQLYF TCRBJ02-02                6              52
+#&gt; 23:  TCRBV12-02 CASSLEAGGAETLYF TCRBJ02-03                6              52
+#&gt; 24:   TCRBV13-01 CASRLRDWGYEQYF TCRBJ02-07                6              52
+#&gt; 25:    TCRBV13-01 CASRRQGNSDYTF TCRBJ01-02                6              52
+#&gt; 26:     TCRBV13-01 CASSDAIYEQYF TCRBJ02-07                6              52
+#&gt; 27:      TCRBV13-01 CASSDGTEQYF TCRBJ02-07                6              52
+#&gt; 28:   TCRBV13-01 CASSGDNSAETLYF TCRBJ02-03                6              52
+#&gt; 29:  TCRBV13-02 CASGDAAGGTGQLYF TCRBJ02-02                6              52
+#&gt; 30:  TCRBV13-02 CASGDWGGATGQLYF TCRBJ02-02                6              52
+#&gt; 31:   TCRBV13-02 CASGETGGNTEVFF TCRBJ01-01                6              52
+#&gt; 32:    TCRBV13-02 CASGGTGVYEQYF TCRBJ02-07                6              52
+#&gt; 33:   TCRBV13-02 CASGPGQSNTEVFF TCRBJ01-01                6              52
+#&gt; 34:  TCRBV13-02 CASGPGRISNERLFF TCRBJ01-04                6              52
+#&gt; 35:    TCRBV13-02 CASGTGGSYEQYF TCRBJ02-07                6              52
+#&gt; 36:   TCRBV13-03 CASSDQGSNERLFF TCRBJ01-04                6              52
+#&gt; 37:   TCRBV13-03 CASSGTVNYAEQFF TCRBJ02-01                6              52
+#&gt; 38:     TCRBV13-03 CASSPDSYEQYF TCRBJ02-07                6              52
+#&gt; 39:   TCRBV13-03 CASSPQGAGNTLYF TCRBJ01-03                6              52
+#&gt; 40:    TCRBV13-03 CASTGQANTEVFF TCRBJ01-01                6              52
+#&gt; 41:  TCRBV14-01 CASSSTGRNNQAPLF TCRBJ01-05                6              52
+#&gt; 42:    TCRBV15-01 CASSGDNAETLYF TCRBJ02-03                6              52
+#&gt; 43:      TCRBV16-01 CASSFKDTQYF TCRBJ02-05                6              52
+#&gt; 44:   TCRBV16-01 CASSPTGGGNTLYF TCRBJ01-03                6              52
+#&gt; 45:  TCRBV19-01 CASSIAGTGNERLFF TCRBJ01-04                6              52
+#&gt; 46:     TCRBV19-01 CASSPTTYEQYF TCRBJ02-07                6              52
+#&gt; 47:   TCRBV19-01 CASSRDNNYAEQFF TCRBJ02-01                6              52
+#&gt; 48:    TCRBV19-01 CASSTGGVYEQYF TCRBJ02-07                6              52
+#&gt; 49:   TCRBV26-01 CASSLGLNQDTQYF TCRBJ02-05                6              52
+#&gt; 50:      TCRBV26-01 CASSLRGEVFF TCRBJ01-01                6              52
+#&gt; 51:     TCRBV26-01 CASSPGQTEVFF TCRBJ01-01                6              52
+#&gt; 52:     TCRBV29-01 CASSFQQDTQYF TCRBJ02-05                6              52
+#&gt; 53:   TCRBV29-01 CASSPTGSGNTLYF TCRBJ01-03                6              52
+#&gt; 54:     TCRBV29-01 CASSTSNSDYTF TCRBJ01-02                6              52
+#&gt; 55:      TCRBV31-01 CAWSRNSDYTF TCRBJ01-02                6              52
+#&gt; 56: TCRBV01-01 CTCSAAGTGVGNTLYF TCRBJ01-03                7              51
+#&gt; 57:   TCRBV03-01 CASSSDRHQDTQYF TCRBJ02-05                7              51
+#&gt; 58:   TCRBV04-01 CASSHRDGQDTQYF TCRBJ02-05                7              51
+#&gt; 59:     TCRBV04-01 CASSLTAYEQYF TCRBJ02-07                7              51
+#&gt; 60:   TCRBV05-01 CASSQDLGPYEQYF TCRBJ02-07                7              51
+#&gt; 61:   TCRBV05-01 CASSQDRQGYEQYF TCRBJ02-07                7              51
+#&gt; 62:  TCRBV05-01 CASSQEGINQDTQYF TCRBJ02-05                7              51
+#&gt; 63:  TCRBV05-01 CASSQEGLGGREQYF TCRBJ02-07                7              51
+#&gt; 64:  TCRBV05-01 CASSQEGTGTETLYF TCRBJ02-03                7              51
+#&gt; 65:   TCRBV05-01 CASSQETGNTEVFF TCRBJ01-01                7              51
+#&gt; 66: TCRBV12-01 CASSLGTVSYNSPLYF TCRBJ01-06                7              51
+#&gt; 67:  TCRBV12-02 CASSLTGGSSYEQYF TCRBJ02-07                7              51
+#&gt; 68:   TCRBV12-02 CASSPTTSAETLYF TCRBJ02-03                7              51
+#&gt; 69:     TCRBV13-02 CASGEGLGEQYF TCRBJ02-07                7              51
+#&gt; 70:   TCRBV13-03 CASSDPGGNERLFF TCRBJ01-04                7              51
+#&gt; 71:      TCRBV19-01 CASSIRAEQYF TCRBJ02-07                7              51
+#&gt; 72:   TCRBV31-01 CAWSLAGDNQAPLF TCRBJ01-05                7              51
+#&gt; 73:  TCRBV03-01 CASSLVGASAETLYF TCRBJ02-03                9              49
+#&gt; 74:     TCRBV04-01 CASSPTSYEQYF TCRBJ02-07                9              49
+#&gt; 75:     TCRBV20-01 CGAREGEDTQYF TCRBJ02-05                9              49
+#&gt; 76:   TCRBV01-01 CTCSAGQNNQAPLF TCRBJ01-05               11              47
+#&gt; 77:    TCRBV02-01 CASSQESQNTLYF TCRBJ02-04               11              47
+#&gt; 78:   TCRBV13-03 CASSDLGGQDTQYF TCRBJ02-05               11              47
+#&gt; 79:    TCRBV16-01 CASSLGGAREQYF TCRBJ02-07               11              47
+#&gt; 80:   TCRBV26-01 CASSLSGNTGQLYF TCRBJ02-02               11              47
+#&gt; 81:   TCRBV29-01 CASSLPGTNERLFF TCRBJ01-04               11              47
+#&gt; 82: TCRBV01-01 CTCSADLGTSAETLYF TCRBJ02-03                8              50
+#&gt; 83:  TCRBV14-01 CASSFTGRNNQAPLF TCRBJ01-05                8              50
+#&gt; 84:    TCRBV19-01 CASSRDRYAEQFF TCRBJ02-01                8              50
+#&gt; 85:    TCRBV01-01 CTCSAGTKDTQYF TCRBJ02-05               10              48
+#&gt; 86:  TCRBV13-02 CASGDVGQGNERLFF TCRBJ01-04               12              46
+#&gt; 87:     TCRBV13-03 CASSDAGAEQFF TCRBJ02-01                9              49
+#&gt; 88:    TCRBV13-01 CASSEGSQDTQYF TCRBJ02-05               13              45
+#&gt; 89:   TCRBV19-01 CASSSGTANTEVFF TCRBJ01-01               13              45
+#&gt; 90:   TCRBV13-01 CASSGTGGYAEQFF TCRBJ02-01               15              43
+#&gt; 91:   TCRBV13-01 CASSRQGGDERLFF TCRBJ01-04               10              48
+#&gt; 92:  TCRBV14-01 CASSFTGQNNQAPLF TCRBJ01-05               10              48
+#&gt; 93:       TCRBV29-01 CASGNTEVFF TCRBJ01-01               10              48
+#&gt; 94:  TCRBV16-01 CASSLGTGVNQAPLF TCRBJ01-05               12              46
+#&gt; 95:  TCRBV01-01 CTCSAEGVSNERLFF TCRBJ01-04               11              47
+#&gt; 96:  TCRBV14-01 CASSSTGYNNQAPLF TCRBJ01-05               11              47
+#&gt; 97: TCRBV03-01 CASSPRTGGSAETLYF TCRBJ02-03               14              44
+#&gt; 98:    TCRBV19-01 CASSRDKQDTQYF TCRBJ02-05               13              45
+#&gt; 99:     TCRBV03-01 CASSLGFYEQYF TCRBJ02-07               14              44
+#&gt;                                   Sequence Positive Present Positive Absent
+#&gt;     Negative Present Negative Absent     P-Value
+#&gt;  1:                0              32 0.065008684
+#&gt;  2:                0              32 0.065008684
+#&gt;  3:                0              32 0.065008684
+#&gt;  4:                0              32 0.065008684
+#&gt;  5:                0              32 0.065008684
+#&gt;  6:                0              32 0.065008684
+#&gt;  7:                0              32 0.065008684
+#&gt;  8:                0              32 0.065008684
+#&gt;  9:                0              32 0.065008684
+#&gt; 10:                0              32 0.065008684
+#&gt; 11:                0              32 0.065008684
+#&gt; 12:                0              32 0.065008684
+#&gt; 13:                0              32 0.065008684
+#&gt; 14:                0              32 0.065008684
+#&gt; 15:                0              32 0.065008684
+#&gt; 16:                0              32 0.065008684
+#&gt; 17:                0              32 0.065008684
+#&gt; 18:                0              32 0.065008684
+#&gt; 19:                0              32 0.065008684
+#&gt; 20:                0              32 0.065008684
+#&gt; 21:                0              32 0.065008684
+#&gt; 22:                0              32 0.065008684
+#&gt; 23:                0              32 0.065008684
+#&gt; 24:                0              32 0.065008684
+#&gt; 25:                0              32 0.065008684
+#&gt; 26:                0              32 0.065008684
+#&gt; 27:                0              32 0.065008684
+#&gt; 28:                0              32 0.065008684
+#&gt; 29:                0              32 0.065008684
+#&gt; 30:                0              32 0.065008684
+#&gt; 31:                0              32 0.065008684
+#&gt; 32:                0              32 0.065008684
+#&gt; 33:                0              32 0.065008684
+#&gt; 34:                0              32 0.065008684
+#&gt; 35:                0              32 0.065008684
+#&gt; 36:                0              32 0.065008684
+#&gt; 37:                0              32 0.065008684
+#&gt; 38:                0              32 0.065008684
+#&gt; 39:                0              32 0.065008684
+#&gt; 40:                0              32 0.065008684
+#&gt; 41:                0              32 0.065008684
+#&gt; 42:                0              32 0.065008684
+#&gt; 43:                0              32 0.065008684
+#&gt; 44:                0              32 0.065008684
+#&gt; 45:                0              32 0.065008684
+#&gt; 46:                0              32 0.065008684
+#&gt; 47:                0              32 0.065008684
+#&gt; 48:                0              32 0.065008684
+#&gt; 49:                0              32 0.065008684
+#&gt; 50:                0              32 0.065008684
+#&gt; 51:                0              32 0.065008684
+#&gt; 52:                0              32 0.065008684
+#&gt; 53:                0              32 0.065008684
+#&gt; 54:                0              32 0.065008684
+#&gt; 55:                0              32 0.065008684
+#&gt; 56:                0              32 0.040243471
+#&gt; 57:                0              32 0.040243471
+#&gt; 58:                0              32 0.040243471
+#&gt; 59:                0              32 0.040243471
+#&gt; 60:                0              32 0.040243471
+#&gt; 61:                0              32 0.040243471
+#&gt; 62:                0              32 0.040243471
+#&gt; 63:                0              32 0.040243471
+#&gt; 64:                0              32 0.040243471
+#&gt; 65:                0              32 0.040243471
+#&gt; 66:                0              32 0.040243471
+#&gt; 67:                0              32 0.040243471
+#&gt; 68:                0              32 0.040243471
+#&gt; 69:                0              32 0.040243471
+#&gt; 70:                0              32 0.040243471
+#&gt; 71:                0              32 0.040243471
+#&gt; 72:                0              32 0.040243471
+#&gt; 73:                1              31 0.068688656
+#&gt; 74:                1              31 0.068688656
+#&gt; 75:                1              31 0.068688656
+#&gt; 76:                2              30 0.088006372
+#&gt; 77:                2              30 0.088006372
+#&gt; 78:                2              30 0.088006372
+#&gt; 79:                2              30 0.088006372
+#&gt; 80:                2              30 0.088006372
+#&gt; 81:                2              30 0.088006372
+#&gt; 82:                0              32 0.024727916
+#&gt; 83:                0              32 0.024727916
+#&gt; 84:                0              32 0.024727916
+#&gt; 85:                1              31 0.045606289
+#&gt; 86:                2              30 0.061231889
+#&gt; 87:                0              32 0.015077998
+#&gt; 88:                2              30 0.041914334
+#&gt; 89:                2              30 0.041914334
+#&gt; 90:                3              29 0.051193356
+#&gt; 91:                0              32 0.009121258
+#&gt; 92:                0              32 0.009121258
+#&gt; 93:                0              32 0.009121258
+#&gt; 94:                1              31 0.019285199
+#&gt; 95:                0              32 0.005472755
+#&gt; 96:                0              32 0.005472755
+#&gt; 97:                1              31 0.007737122
+#&gt; 98:                0              32 0.001920171
+#&gt; 99:                0              32 0.001122178
+#&gt;     Negative Present Negative Absent     P-Value</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
