@@ -23,7 +23,7 @@
 #' vaccs <- readTrn(listPos, FIELD, COUNT, COPY_RANGE, "vacc")  
 #' 
 #' mod <- train(naive, vaccs, listNeg, listPos, FIELD, COUNT, COPY_RANGE, P_CUTOFF, MIN_PUBLIC, NULL)
-#' pred(mod, system.file("extdata", "Post", "post0.tsv", package="iCAT"), "unknown-sample-label", FIELD, COUNT, COPY_RANGE)
+#' pred(mod, system.file("extdata", "Pre", "KJW100_HLA-A2_10_PRE.tsv", package="iCAT"), "unknown-sample-label", FIELD, COUNT, COPY_RANGE)
 pred <- function(comb, indpt, names, field, count, copyrange) {
   fs <- strsplit(field, ' ')[[1]]
   copyrange <- as.integer(strsplit(copyrange, ' ')[[1]])
