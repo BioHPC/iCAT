@@ -68,8 +68,8 @@ ui <- shiny::fluidPage(shinyjs::useShinyjs(),
                                  "count",
                                  "What column name contains clonotype counts in your data?",
                                  choices = list(
-                                   '"count (templates)"' = "count (templates)",
                                    '"copy"' = "copy",
+                                   '"count (templates)"' = "count (templates)",
                                    "Other" = "other"
                                  )
                                ),
@@ -202,7 +202,7 @@ server <- function(input, output, session) {
   preds <- shiny::eventReactive(input$pred, {
     shinyjs::show("h3")
     shinyjs::show("dnPred")
-    return(pred(both(), input$indpt$datapath, input$indpt$name, field, count, copyrange))
+    return(pred(both(), input$indpt$datapath, input$indpt$name, field, count, input$copyrange))
   })
 
   output$plot <- shiny::renderPlot({
