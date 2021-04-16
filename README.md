@@ -20,7 +20,10 @@ High throughput sequencing of immune cell receptor sequences presents a unique 
 To install devtools, use the command:
 ```
 install.packages("devtools") 
-```        
+``` 
+
+* For Windows Users:
+  - Rtools is required to install iCAT package without an error. Please follow the [Rtools install guide](https://cran.r-project.org/bin/windows/Rtools/).
 *Note*: iCAT also uses shiny, shinyjs, data.table, ggplot2, DT, hash, and magrittr. However, those packages will be installed if using `install_github` from below.
 
 ## Installing iCAT
