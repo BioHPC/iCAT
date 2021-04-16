@@ -23,7 +23,7 @@ install.packages("devtools")
 ``` 
 
 * For Windows Users:
-  - Rtools is required to install iCAT package without an error. Please follow the [Rtools install guide](https://cran.r-project.org/bin/windows/Rtools/).
+  - Rtools is required if you have a R version >= R 4.0.0 in your Windows system. Please follow the [Rtools installing guide](https://cran.r-project.org/bin/windows/Rtools/) to download and install it.
 
 *Note*: iCAT also uses shiny, shinyjs, data.table, ggplot2, DT, hash, and magrittr. However, those packages will be installed if using `install_github` from below.
 
