@@ -16,6 +16,7 @@ Imports:
 	hash,
     stats
 Suggests:
+	markdown,
 	knitr,
 	devtools
 License: file LICENSE
