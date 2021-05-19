@@ -84,12 +84,17 @@ pred <- function(comb, indpt, names, field, count, copyrange) {
                        mean = vacmean,
                        sd = vacsd,
                        log = FALSE)
+  
+  
 
   class <- ifelse(idnavdnorm > idvacdnorm, "Negative", "Positive")
+  
+  e <- exp(1)
+  x <- ifelse(idnavdnorm > idvacdnorm, idnavdnorm - idvacdnorm, idvacdnorm - idnavdnorm)
 
-
-  df <- cbind(basename(names), class, idpercs)
-  colnames(df) <- c("Sample", "Prediction", "% TARS")
+  df <- cbind(basename(names), class, idpercs, 100*(1-(e^x/((e^x)+1))))
+              
+  colnames(df) <- c("Sample", "Prediction", "% TARS", "% Uncertainty")
 
   return(df)
 }
