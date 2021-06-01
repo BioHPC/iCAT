@@ -177,7 +177,7 @@ server <- function(input, output, session) {
       }
       progress$set(value = value, detail = detail)
     }
-    copyrange <- input$copyrange
+    copyrange <<- gsub(":", " ", input$copyrange)
 
     updateProgress(detail = "Reading files")
     naive <- readTrn(input$pre$datapath, field, count, copyrange, "naive")
@@ -202,7 +202,7 @@ server <- function(input, output, session) {
   preds <- shiny::eventReactive(input$pred, {
     shinyjs::show("h3")
     shinyjs::show("dnPred")
-    return(pred(both(), input$indpt$datapath, input$indpt$name, field, count, input$copyrange))
+    return(pred(both(), input$indpt$datapath, input$indpt$name, field, count, copyrange))
   })
 
   output$plot <- shiny::renderPlot({
@@ -211,7 +211,7 @@ server <- function(input, output, session) {
 
   output$trnTable <- shiny::renderTable({
     both()
-    trnStats(input$pre$datapath, input$post$datapath, field, count, input$copyrange)
+    trnStats(input$pre$datapath, input$post$datapath, field, count, copyrange)
   }, rownames = TRUE)
   output$table <- renderTable({
     classMat(both())
@@ -242,7 +242,7 @@ server <- function(input, output, session) {
     filename = "training_summary.csv",
     content = function(file) {
       both()
-      write.csv(trnStats(input$pre$datapath, input$post$datapath, field, count, input$copyrange), file, row.names=TRUE)
+      write.csv(trnStats(input$pre$datapath, input$post$datapath, field, count, copyrange), file, row.names=TRUE)
     }
   )
 
