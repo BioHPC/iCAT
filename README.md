@@ -86,7 +86,7 @@ The _Library_ tab displays a table consisting of the "target associated receptor
 
 **Prediction:**
 
-![Alt text](/screenshot/pred-icat.png?raw=true "Prediction")
+![Alt text](/screenshot/pred-icatv2.png?raw=true "Prediction")
 
 The _Prediction_ tab allows the user to add sequencing data from unknown samples (e.g. not included in the previous training data) for classification as "Positive" or "Negative" and determining the accuracy of the diagnostic assay.
 
