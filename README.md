@@ -74,6 +74,7 @@ Individual samples’ sequencing data should be in .tsv format.
 - `CDR3 Amino Acid Sequence` (TCRs will need the same CDR3 region to be called ‘Identical’)
 - `TCRV-CDR3-TCRJ` (TCRs will need the same TCRBV segment, CDR3 region, and TCRJ segment to be called ‘Identical’) *Recommended*
 - `Nucleic Acid (DNA)` (TCRs will need the exact same DNA rearrangements/sequence across TCRBV, CDR3, and TCRJ)
+- `other` (customized column name)
 
 4) Choose the `Max p-value`, which determines the minimal degree of statistical significance that iCAT will accept as being potentially "associated" with the positive group. Defaults to _p_ < 0.1.
 
